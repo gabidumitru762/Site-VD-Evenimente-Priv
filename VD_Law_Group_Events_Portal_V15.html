@@ -1,0 +1,1507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>VD Law Group</title>
+<style>
+@font-face {
+  font-family: 'Ebrima';
+  src: local('Ebrima');
+}
+
+:root {
+  --bg: #000000;
+  --bg-panel: #0a0a0a;
+  --bg-input: #000000;
+  --fg: #f5f5f2;
+  --fg-dim: #9a9a95;
+  --fg-faint: #6b6b66;
+  --hairline: #2a2a26;
+  --accent: #f5f5f2;
+  --accent-contrast: #000000;
+  --today-tint: #ff2222;
+  --shadow: rgba(0,0,0,0.6);
+  --dropdown-bg: #000000;
+  --dropdown-fg: #ffffff;
+  --dropdown-border: #333333;
+  --dropdown-hover-bg: #ffffff;
+  --dropdown-hover-fg: #000000;
+  --dropdown-scrollbar: #555555;
+  --highlight-glow: #ffffff;
+  --picker-bg: #0a0a0a;
+  --picker-fg: #f5f5f2;
+  --picker-border: #333333;
+  --picker-cell-hover: #ffffff;
+  --picker-cell-hover-fg: #000000;
+  --picker-range-bg: #333333;
+  --picker-selected-bg: #ffffff;
+  --picker-selected-fg: #000000;
+  --note-pink: #ff8fc7;
+}
+
+html[data-theme="light"] {
+  --bg: #f7f6f2;
+  --bg-panel: #ffffff;
+  --bg-input: #ffffff;
+  --fg: #14140f;
+  --fg-dim: #5a5a52;
+  --fg-faint: #8c8c82;
+  --hairline: #ddddd3;
+  --accent: #14140f;
+  --accent-contrast: #ffffff;
+  --today-tint: #e02020;
+  --shadow: rgba(0,0,0,0.12);
+  --dropdown-bg: #ffffff;
+  --dropdown-fg: #14140f;
+  --dropdown-border: #cfcfc7;
+  --dropdown-hover-bg: #14140f;
+  --dropdown-hover-fg: #ffffff;
+  --dropdown-scrollbar: #b3b3ab;
+  --highlight-glow: #000000;
+  --picker-bg: #ffffff;
+  --picker-fg: #14140f;
+  --picker-border: #dddddd;
+  --picker-cell-hover: #14140f;
+  --picker-cell-hover-fg: #ffffff;
+  --picker-range-bg: #e5e5e0;
+  --picker-selected-bg: #14140f;
+  --picker-selected-fg: #ffffff;
+  --note-pink: #d6488f;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0; padding: 0; background: var(--bg); color: var(--fg);
+  font-family: 'Ebrima', Arial, sans-serif; min-height: 100vh;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+a { color: var(--fg); text-decoration: underline; }
+a:hover { opacity: 0.7; }
+
+.serif-display { font-family: Georgia, 'Times New Roman', 'Cambria', serif; font-weight: 400; }
+.label-mono { font-family: 'Courier New', Courier, monospace; text-transform: uppercase; letter-spacing: 2.5px; font-size: 0.7em; color: var(--fg-dim); }
+
+/* Full wordmark logo, same serif font used throughout the site */
+.vd-logo-text {
+  font-family: Georgia, 'Times New Roman', 'Cambria', serif;
+  font-size: 1.35em;
+  font-weight: 700;
+  color: var(--fg);
+  white-space: nowrap;
+  letter-spacing: 0.5px;
+}
+
+#siteHeader { display: flex; align-items: center; justify-content: space-between; padding: 22px 32px; border-bottom: 1px solid var(--hairline); gap: 16px; flex-wrap: wrap; }
+#headerLeft { display: flex; align-items: center; gap: 14px; }
+.header-divider { width: 1px; height: 18px; background: var(--hairline); }
+#headerLeft .label-mono { white-space: nowrap; }
+#headerRight { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+#themeToggle { display: flex; align-items: center; gap: 8px; cursor: pointer; user-select: none; }
+.switch-track { width: 42px; height: 22px; border-radius: 999px; border: 1px solid var(--hairline); background: var(--bg-panel); position: relative; transition: background 0.2s ease; }
+.switch-thumb { position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; border-radius: 50%; background: var(--fg); transition: left 0.2s ease, background 0.2s ease; }
+html[data-theme="light"] .switch-thumb { left: 22px; }
+#adminSection { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+#adminStatus { font-size: 0.78em; color: var(--fg-dim); white-space: nowrap; }
+
+.pill-btn { background: transparent; color: var(--fg); border: 1px solid var(--hairline); border-radius: 999px; padding: 8px 18px; cursor: pointer; font-family: 'Ebrima', Arial, sans-serif; font-size: 0.78em; letter-spacing: 0.5px; transition: background 0.15s, color 0.15s; }
+.pill-btn:hover { background: var(--fg); color: var(--accent-contrast); }
+.pill-btn.solid { background: var(--fg); color: var(--accent-contrast); }
+.pill-btn.solid:hover { opacity: 0.85; background: var(--fg); }
+.pill-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.pill-btn:disabled:hover { background: transparent; color: var(--fg); }
+.pill-btn.small { padding: 5px 12px; font-size: 0.7em; }
+
+#ribbon { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; padding: 14px 20px; border-bottom: 1px solid var(--hairline); }
+.ribbon-tab { background: transparent; color: var(--fg-dim); border: none; padding: 8px 16px; cursor: pointer; font-family: 'Courier New', Courier, monospace; text-transform: uppercase; letter-spacing: 1.5px; font-size: 0.72em; border-bottom: 1px solid transparent; transition: color 0.15s, border-color 0.15s; }
+.ribbon-tab:hover { color: var(--fg); }
+.ribbon-tab.active { color: var(--fg); border-bottom: 1px solid var(--fg); }
+
+#appContainer { max-width: 1700px; margin: 0 auto; padding: 34px 32px 50px; display: flex; flex-direction: column; gap: 22px; }
+
+#pageHero { display: flex; flex-direction: column; gap: 10px; padding-bottom: 6px; }
+.hero-eyebrow { display: flex; align-items: center; gap: 10px; }
+.hero-eyebrow .dash { width: 18px; height: 1px; background: var(--fg-dim); }
+.page-title { font-size: 2.6em; margin: 0; font-family: Georgia, 'Times New Roman', serif; font-weight: 400; line-height: 1.05; }
+.page-subtitle { color: var(--fg-dim); font-size: 0.92em; max-width: 640px; line-height: 1.5; }
+
+#controlsPanel { display: flex; flex-direction: column; gap: 14px; border-top: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline); padding: 18px 0; }
+#topControls { display: flex; flex-wrap: nowrap; justify-content: flex-start; align-items: flex-end; gap: 16px; }
+
+#filterBar { display: flex; flex-wrap: nowrap; gap: 22px; align-items: flex-end; flex: 1; min-width: 0; }
+.filter-section { display: flex; flex-direction: column; gap: 8px; position: relative; flex-shrink: 0; }
+
+.filter-trigger { background: var(--bg-input); color: var(--fg); border: 1px solid var(--hairline); border-radius: 999px; padding: 8px 16px; font-size: 0.82em; cursor: pointer; font-family: 'Ebrima', Arial, sans-serif; display: flex; align-items: center; gap: 8px; min-width: 190px; justify-content: space-between; }
+.filter-trigger:hover { border-color: var(--fg-dim); }
+.filter-trigger .caret { font-size: 0.75em; opacity: 0.7; }
+
+.filter-dropdown-panel { display: none; position: absolute; top: calc(100% + 8px); left: 0; min-width: 260px; max-width: 340px; background: var(--dropdown-bg); color: var(--dropdown-fg); border: 1px solid var(--dropdown-border); border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.35); z-index: 500; overflow: hidden; }
+.filter-dropdown-panel.open { display: block; }
+
+.slicer-scroll { scrollbar-width: thin; scrollbar-color: var(--dropdown-scrollbar) transparent; }
+.slicer-scroll::-webkit-scrollbar { width: 6px; }
+.slicer-scroll::-webkit-scrollbar-track { background: transparent; }
+.slicer-scroll::-webkit-scrollbar-thumb { background: var(--dropdown-scrollbar); border-radius: 999px; }
+
+.filter-dropdown-list { max-height: 280px; overflow-y: auto; padding: 8px; }
+.filter-option-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 10px; border-radius: 8px; cursor: pointer; font-size: 0.85em; color: var(--dropdown-fg); background: transparent; transition: background 0.12s ease, color 0.12s ease; }
+.filter-option-row:hover { background: var(--dropdown-hover-bg); color: var(--dropdown-hover-fg); }
+.filter-option-row.selected { background: var(--dropdown-hover-bg); color: var(--dropdown-hover-fg); }
+.filter-option-row .opt-label { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 8px; }
+.filter-option-row .opt-count { opacity: 0.6; font-size: 0.85em; margin-right: 6px; }
+.filter-option-remove { display: none; width: 16px; height: 16px; border-radius: 50%; border: 1px solid currentColor; align-items: center; justify-content: center; font-size: 0.7em; line-height: 1; flex-shrink: 0; background: transparent; color: inherit; }
+.filter-option-row.selected .filter-option-remove { display: flex; }
+.filter-dropdown-empty { padding: 14px; font-size: 0.8em; color: var(--fg-faint); text-align: center; }
+
+#clearFiltersBtn { height: 36px; flex-shrink: 0; }
+
+/* Search bar: to the right of Clear Filters, fills remaining space */
+#searchSection { display: flex; flex-direction: column; gap: 8px; position: relative; flex: 1; min-width: 220px; }
+#searchInputWrap { position: relative; display: flex; align-items: center; }
+#eventSearchInput { width: 100%; background: var(--bg-input); color: var(--fg); border: 1px solid var(--hairline); border-radius: 999px; padding: 8px 40px 8px 16px; font-size: 0.82em; font-family: 'Ebrima', Arial, sans-serif; }
+#eventSearchInput:focus { outline: none; border-color: var(--fg-dim); }
+#eventSearchInput::placeholder { color: var(--fg-faint); }
+#searchIconBtn {
+  position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+  width: 26px; height: 26px; border-radius: 50%; border: none; background: transparent;
+  color: var(--fg-dim); display: flex; align-items: center; justify-content: center; cursor: default;
+}
+#searchIconBtn svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; }
+#searchIconBtn.is-clear { cursor: pointer; color: var(--fg); }
+#searchIconBtn.is-clear:hover { background: var(--fg); color: var(--accent-contrast); }
+
+.search-dropdown-panel { display: none; position: absolute; top: calc(100% + 8px); left: 0; right: 0; background: var(--dropdown-bg); color: var(--dropdown-fg); border: 1px solid var(--dropdown-border); border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.35); z-index: 501; overflow: hidden; }
+.search-dropdown-panel.open { display: block; }
+.search-dropdown-list { max-height: 320px; overflow-y: auto; padding: 8px; }
+.search-option-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 9px 10px; border-radius: 8px; cursor: pointer; font-size: 0.85em; color: var(--dropdown-fg); background: transparent; transition: background 0.1s ease, color 0.1s ease; }
+.search-option-row:hover { background: var(--dropdown-hover-bg); color: var(--dropdown-hover-fg); }
+.search-option-row .search-opt-name { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold; }
+.search-option-row .search-opt-meta { color: var(--fg-faint); font-size: 0.85em; white-space: nowrap; flex-shrink: 0; }
+.search-option-row:hover .search-opt-meta, .search-option-row:hover .search-opt-name { color: inherit; }
+.search-dropdown-empty { padding: 14px; font-size: 0.8em; color: var(--fg-faint); text-align: center; }
+
+#resultCount { font-size: 0.72em; color: var(--fg-faint); font-family: 'Courier New', Courier, monospace; letter-spacing: 0.5px; }
+#activeFilterTags { display: flex; flex-wrap: wrap; gap: 6px; }
+.active-tag { border: 1px solid var(--hairline); border-radius: 999px; background: transparent; color: var(--fg); padding: 4px 12px; font-size: 0.72em; letter-spacing: 0.5px; display: inline-flex; align-items: center; gap: 6px; }
+.active-tag button { background: none; border: none; color: var(--fg); cursor: pointer; font-weight: bold; font-size: 1em; line-height: 1; padding: 0; }
+
+#calendarSection { display: flex; flex-direction: column; gap: 10px; }
+#calendarSectionLabel { font-family: 'Courier New', Courier, monospace; text-transform: uppercase; letter-spacing: 2px; font-size: 0.72em; color: var(--fg-dim); }
+
+#monthYearRow { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 4px 0; flex-wrap: wrap; }
+#monthYearRow select { background: var(--bg-input); color: var(--fg); border: none; border-bottom: 1px solid var(--hairline); padding: 6px 8px; font-family: 'Ebrima', Arial, sans-serif; font-size: 0.88em; cursor: pointer; }
+#monthLabelBig { font-family: Georgia, 'Times New Roman', serif; font-size: 1.2em; }
+#currentMonthTag { font-size: 0.68em; color: var(--fg-faint); font-family: 'Courier New', Courier, monospace; text-transform: uppercase; letter-spacing: 1px; }
+
+.calendar-wrapper { border: 1px solid var(--hairline); width: 100%; overflow: visible; }
+.calendar-grid-wrap { position: relative; }
+.calendar-grid { display: grid; width: 100%; position: relative; }
+
+.day-header-cell { border-bottom: 1px solid var(--hairline); border-right: 1px solid var(--hairline); padding: 6px 2px; text-align: center; font-size: 0.66em; color: var(--fg-dim); background: var(--bg-panel); position: relative; z-index: 2; font-family: 'Courier New', Courier, monospace; }
+.day-header-cell:last-child { border-right: none; }
+.day-header-cell.weekend { color: var(--fg); }
+.day-header-cell .dow { display: block; font-size: 0.85em; opacity: 0.6; }
+.day-header-cell.today-header { background: var(--today-tint) !important; color: #ffffff !important; font-weight: bold; margin-left: -10px; margin-right: -10px; padding-left: 12px; padding-right: 12px; border-radius: 4px; position: relative; z-index: 5; box-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+.day-header-cell.today-header .dow { opacity: 0.85; }
+
+.day-col-bg { border-right: 1px solid var(--hairline); min-height: 30px; }
+.day-col-bg.past-day { opacity: 0.5; }
+.today-col-line { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--today-tint); opacity: 0.55; z-index: 4; pointer-events: none; }
+
+.event-bar { background: var(--fg); color: var(--accent-contrast); font-size: 0.68em; padding: 2px 5px; margin: 1px 1px; border-radius: 4px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; display: flex; align-items: center; gap: 4px; position: relative; grid-row: var(--lane); z-index: 3; line-height: 1.3; transition: opacity 0.25s ease, box-shadow 0.25s ease; }
+.event-bar .ev-name { font-weight: bold; }
+.event-bar .ev-meta { font-weight: normal; opacity: 0.7; }
+.event-bar.tall { white-space: normal; align-items: flex-start; padding-top: 3px; min-height: 24px; }
+.event-bar.extra-tall { min-height: 36px; }
+.event-bar.past-event { opacity: 0.45; }
+.event-bar:hover { filter: brightness(0.9); z-index: 9; }
+.event-bar.tag-signedup { background: #cdf0cd; color: #14140f; }
+.event-bar.tag-speakingat { background: #cfe3f7; color: #14140f; }
+.event-bar.tag-hosting { color: #2b1d00; padding-right: 24px; background-image: linear-gradient(120deg, #8a6300 0%, #e8b400 20%, #fff4c2 42%, #ffe97a 55%, #d69f00 78%, #8a6300 100%); background-size: 260% 100%; background-position: 0% 50%; box-shadow: 0 0 6px rgba(255, 215, 0, 0.5), inset 0 0 4px rgba(255,255,255,0.55); border: 1px solid #8a6300; transition: background-position 1.8s ease, opacity 0.25s ease, box-shadow 0.25s ease; }
+.event-bar.tag-hosting.shimmer-active { background-position: 100% 50%; }
+.event-bar.tag-notattending { background: #f5c6c6; color: rgba(20,20,15,0.55); }
+.event-bar.tag-notattending .ev-name, .event-bar.tag-notattending .ev-meta { opacity: 0.7; }
+.hosting-logo-badge { position: absolute; right: 3px; bottom: 1px; width: 15px; height: 15px; display: flex; align-items: center; justify-content: center; }
+.hosting-logo-badge svg { width: 13px; height: 13px; fill: #14140f; }
+
+/* Note indicator: small pink page/tab shape, bottom-left corner of the bar */
+.note-indicator {
+  position: absolute; left: 2px; bottom: 1px; width: 8px; height: 10px;
+  background: var(--note-pink);
+  clip-path: polygon(0 0, 100% 0, 100% 70%, 60% 100%, 0 100%);
+}
+
+.calendar-grid.search-mode .event-bar:not(.search-highlighted) { opacity: 0.18; filter: grayscale(1); }
+.event-bar.search-highlighted { box-shadow: 0 0 0 2px var(--highlight-glow), 0 0 14px 3px var(--highlight-glow); z-index: 20 !important; opacity: 1 !important; }
+
+.event-tooltip { display: none; position: fixed; background: var(--bg-panel); color: var(--fg); border: 1px solid var(--hairline); border-radius: 8px; padding: 12px 14px; font-size: 0.78em; max-width: 320px; z-index: 2000; box-shadow: 0 8px 24px var(--shadow); line-height: 1.5; }
+.event-tooltip strong { display: block; font-family: Georgia, serif; font-size: 1.1em; margin-bottom: 6px; }
+.event-tooltip .tt-row { margin-top: 2px; font-weight: normal; }
+.event-tooltip .tt-label { font-weight: bold; font-family: 'Courier New', monospace; text-transform: uppercase; font-size: 0.85em; letter-spacing: 0.5px; }
+.event-tooltip a { color: var(--fg); font-weight: bold; }
+.event-tooltip a:hover { opacity: 0.7; }
+.event-tooltip .tt-note { color: var(--note-pink); font-style: italic; margin-top: 6px; }
+
+.calendar-legend { display: flex; gap: 16px; align-items: center; font-size: 0.7em; color: var(--fg-faint); flex-wrap: wrap; font-family: 'Courier New', Courier, monospace; }
+.legend-swatch { display: inline-block; width: 12px; height: 12px; border-radius: 3px; vertical-align: middle; margin-right: 4px; }
+.legend-swatch.white { background: var(--fg); }
+.legend-swatch.green { background: #cdf0cd; }
+.legend-swatch.blue { background: #cfe3f7; }
+.legend-swatch.gold { background: linear-gradient(120deg, #8a6300, #e8b400, #fff4c2); }
+.legend-swatch.red { background: #f5c6c6; }
+.legend-line { display: inline-block; width: 10px; height: 12px; background: var(--today-tint); opacity: 0.3; vertical-align: middle; margin-right: 4px; }
+
+.empty-cal-msg { padding: 30px; text-align: center; color: var(--fg-faint); font-family: 'Courier New', monospace; letter-spacing: 0.5px; }
+#bottomMonthNav { display: flex; align-items: center; justify-content: center; gap: 16px; padding: 12px 0 4px; }
+
+#unknownSection { display: none; flex-direction: column; gap: 10px; }
+#unknownSection.active { display: flex; }
+table.unknown-table { width: 100%; border-collapse: collapse; font-family: 'Ebrima', Arial, sans-serif; }
+table.unknown-table th, table.unknown-table td { border: 1px solid var(--hairline); padding: 10px 12px; text-align: left; font-size: 0.85em; }
+table.unknown-table th { background: var(--bg-panel); font-family: 'Courier New', Courier, monospace; text-transform: uppercase; letter-spacing: 1px; font-size: 0.72em; color: var(--fg-dim); }
+table.unknown-table tr:nth-child(even) td { background: var(--bg-panel); }
+table.unknown-table td.status-badge-cell span { font-family: 'Courier New', Courier, monospace; font-size: 0.75em; padding: 3px 8px; border-radius: 999px; border: 1px solid var(--hairline); white-space: nowrap; }
+.unknown-empty-msg { padding: 30px; text-align: center; color: var(--fg-faint); font-family: 'Courier New', monospace; }
+
+.modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 999; align-items: center; justify-content: center; }
+.modal-overlay.open { display: flex; }
+.modal-box { background: var(--bg-panel); border: 1px solid var(--hairline); padding: 30px 32px; width: 92%; max-width: 520px; max-height: 88vh; overflow-y: auto; }
+.modal-box h2 { margin-top: 0; font-family: Georgia, 'Times New Roman', serif; font-size: 1.6em; font-weight: 400; border-bottom: 1px solid var(--hairline); padding-bottom: 14px; }
+.form-row { margin-bottom: 16px; display: flex; flex-direction: column; gap: 6px; }
+.form-row label { font-family: 'Courier New', Courier, monospace; font-size: 0.7em; text-transform: uppercase; letter-spacing: 1.5px; color: var(--fg-dim); }
+.form-row input[type="text"], .form-row input[type="url"], .form-row input[type="password"], .form-row select, .form-row textarea { background: var(--bg-input); color: var(--fg); border: none; border-bottom: 1px solid var(--hairline); padding: 8px 4px; font-family: 'Ebrima', Arial, sans-serif; font-size: 0.95em; }
+.form-row input:focus, .form-row select:focus, .form-row textarea:focus { outline: none; border-bottom-color: var(--fg); }
+.form-row .new-cat-row { display: flex; gap: 8px; margin-top: 6px; }
+.form-row .new-cat-row input { flex: 1; }
+.modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+.error-msg { color: #d9534f; font-size: 0.8em; min-height: 1em; }
+.hint-msg { color: var(--fg-faint); font-size: 0.75em; }
+.manual-list { display: flex; flex-direction: column; gap: 8px; max-height: 220px; overflow-y: auto; border: 1px solid var(--hairline); padding: 10px; }
+.manual-list label { display: flex; align-items: center; gap: 8px; font-size: 0.85em; text-transform: none; letter-spacing: normal; color: var(--fg); font-family: 'Ebrima', Arial, sans-serif; }
+.note-field-label { color: var(--note-pink) !important; }
+textarea#eventNoteInput { font-style: italic; }
+
+#eventModal .modal-box, #eventModal .manual-list { scrollbar-width: thin; scrollbar-color: var(--dropdown-scrollbar) transparent; }
+#eventModal .modal-box::-webkit-scrollbar, #eventModal .manual-list::-webkit-scrollbar { width: 6px; }
+#eventModal .modal-box::-webkit-scrollbar-track, #eventModal .manual-list::-webkit-scrollbar-track { background: transparent; }
+#eventModal .modal-box::-webkit-scrollbar-thumb, #eventModal .manual-list::-webkit-scrollbar-thumb { background: var(--dropdown-scrollbar); border-radius: 999px; }
+
+.date-field-row { display: flex; align-items: center; gap: 10px; }
+.date-field-display { flex: 1; background: var(--bg-input); color: var(--fg); border: none; border-bottom: 1px solid var(--hairline); padding: 8px 4px; font-family: 'Ebrima', Arial, sans-serif; font-size: 0.95em; }
+.date-picker-trigger { width: 34px; height: 34px; flex-shrink: 0; border-radius: 8px; background: var(--fg); color: var(--accent-contrast); border: 1px solid var(--hairline); display: flex; align-items: center; justify-content: center; cursor: pointer; }
+.date-picker-trigger svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.6; }
+
+.datepicker-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.55); z-index: 3000; align-items: center; justify-content: center; }
+.datepicker-overlay.open { display: flex; }
+.datepicker-box { background: var(--picker-bg); color: var(--picker-fg); border: 1px solid var(--picker-border); border-radius: 14px; padding: 20px 22px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); display: flex; flex-direction: column; gap: 14px; max-width: 680px; width: 94%; }
+.datepicker-header-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.datepicker-title { font-family: Georgia, 'Times New Roman', serif; font-size: 1.2em; }
+.datepicker-mode-toggle { display: flex; gap: 6px; }
+.datepicker-months-wrap { display: flex; gap: 24px; flex-wrap: wrap; justify-content: center; }
+.datepicker-month { display: flex; flex-direction: column; gap: 8px; min-width: 260px; }
+.datepicker-month-nav { display: flex; align-items: center; justify-content: space-between; }
+.datepicker-month-nav button { background: transparent; border: 1px solid var(--picker-border); color: var(--picker-fg); border-radius: 6px; width: 26px; height: 26px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.datepicker-month-nav button:hover { background: var(--picker-cell-hover); color: var(--picker-cell-hover-fg); }
+.datepicker-month-title { font-weight: bold; font-size: 0.92em; display: flex; gap: 6px; }
+.datepicker-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+.datepicker-dow { text-align: center; font-size: 0.68em; color: var(--fg-faint); font-family: 'Courier New', Courier, monospace; padding-bottom: 4px; }
+.datepicker-day { text-align: center; padding: 7px 0; font-size: 0.82em; border-radius: 6px; cursor: pointer; }
+.datepicker-day:hover { background: var(--picker-cell-hover); color: var(--picker-cell-hover-fg); }
+.datepicker-day.outside { opacity: 0.3; }
+.datepicker-day.in-range { background: var(--picker-range-bg); }
+.datepicker-day.range-edge { background: var(--picker-selected-bg); color: var(--picker-selected-fg); font-weight: bold; }
+
+.datepicker-quickpick-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.datepicker-quickpick-cell { text-align: center; padding: 10px 4px; border-radius: 8px; cursor: pointer; font-size: 0.85em; border: 1px solid var(--picker-border); }
+.datepicker-quickpick-cell:hover { background: var(--picker-cell-hover); color: var(--picker-cell-hover-fg); }
+.datepicker-quickpick-cell.selected { background: var(--picker-selected-bg); color: var(--picker-selected-fg); }
+
+.datepicker-footer { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; border-top: 1px solid var(--picker-border); padding-top: 12px; }
+.datepicker-selection-summary { font-size: 0.8em; color: var(--fg-dim); font-family: 'Courier New', Courier, monospace; }
+.datepicker-actions { display: flex; gap: 8px; }
+
+footer#siteFooter { text-align: center; padding: 20px; color: var(--fg-faint); font-size: 0.7em; font-family: 'Courier New', Courier, monospace; letter-spacing: 0.5px; border-top: 1px solid var(--hairline); }
+</style>
+</head>
+<body>
+
+<header id="siteHeader">
+  <div id="headerLeft">
+    <span class="vd-logo-text">VD Law Group</span>
+    <div class="header-divider"></div>
+    <span class="label-mono">Admin</span>
+  </div>
+  <div id="headerRight">
+    <div id="themeToggle">
+      <span class="label-mono">Dark</span>
+      <div class="switch-track"><div class="switch-thumb"></div></div>
+      <span class="label-mono">Light</span>
+    </div>
+    <div id="adminSection">
+      <span id="adminStatus">Viewing as: Guest</span>
+      <button class="pill-btn" id="loginBtn">Log In</button>
+      <button class="pill-btn" id="logoutBtn" style="display:none;">Log Out</button>
+      <button class="pill-btn" id="changePwBtn" style="display:none;">Change Password</button>
+    </div>
+  </div>
+</header>
+
+<nav id="ribbon">
+  <button class="ribbon-tab" data-tab="scheduled">Scheduled</button>
+  <button class="ribbon-tab" data-tab="international">International</button>
+  <button class="ribbon-tab" data-tab="signedup">Signed Up</button>
+  <button class="ribbon-tab" data-tab="speakingat">Speaking At</button>
+  <button class="ribbon-tab" data-tab="hosting">Hosting</button>
+  <button class="ribbon-tab" data-tab="unknown">Unknown Date/Location</button>
+</nav>
+
+<div id="appContainer">
+
+  <div id="pageHero">
+    <div class="hero-eyebrow"><span class="dash"></span><span class="label-mono">Acces Restricționat</span></div>
+    <h2 class="page-title serif-display" id="pageTitle">Scheduled.</h2>
+    <p class="page-subtitle">Internal events calendar for VD Law Group. Browse by tab, filter by category/country, or search directly by event name or date to locate and highlight an event.</p>
+  </div>
+
+  <div id="controlsPanel">
+    <div id="topControls">
+      <div id="filterBar">
+        <div class="filter-section">
+          <span class="label-mono">Category</span>
+          <button class="filter-trigger" id="categoryFilterTrigger" type="button">
+            <span id="categoryFilterTriggerLabel">All Categories</span><span class="caret">▾</span>
+          </button>
+          <div class="filter-dropdown-panel" id="categoryFilterPanel"><div class="filter-dropdown-list slicer-scroll" id="categoryFilterList"></div></div>
+        </div>
+        <div class="filter-section">
+          <span class="label-mono">Country</span>
+          <button class="filter-trigger" id="countryFilterTrigger" type="button">
+            <span id="countryFilterTriggerLabel">All Countries</span><span class="caret">▾</span>
+          </button>
+          <div class="filter-dropdown-panel" id="countryFilterPanel"><div class="filter-dropdown-list slicer-scroll" id="countryFilterList"></div></div>
+        </div>
+        <button class="pill-btn" id="clearFiltersBtn" type="button">Clear Filters</button>
+
+        <div id="searchSection">
+          <span class="label-mono">Search Events</span>
+          <div id="searchInputWrap">
+            <input type="text" id="eventSearchInput" placeholder="Event name or date (dd/mm/yy)...">
+            <button id="searchIconBtn" type="button" title="Search">
+              <svg id="searchIconSvg" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </button>
+          </div>
+          <div class="search-dropdown-panel" id="searchDropdownPanel"><div class="search-dropdown-list slicer-scroll" id="searchDropdownList"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="topControls2" style="display:flex; justify-content:flex-end;">
+      <button class="pill-btn solid" id="addEventBtn" disabled title="Log in as admin to add events">+ Add Event</button>
+    </div>
+
+    <div id="activeFilterTags"></div>
+    <div id="resultCount"></div>
+  </div>
+
+  <div id="calendarSection">
+    <div id="calendarSectionLabel">Events Calendar</div>
+
+    <div id="monthYearRow">
+      <select id="monthFilterSelect"></select>
+      <select id="yearFilterSelect"></select>
+      <button class="pill-btn" id="todayBtn" type="button">Today</button>
+      <span id="monthLabelBig" class="serif-display"></span>
+      <span id="currentMonthTag" style="display:none;">current month</span>
+    </div>
+
+    <div class="calendar-legend">
+      <span><span class="legend-swatch white"></span>Default event</span>
+      <span><span class="legend-swatch green"></span>Signed Up</span>
+      <span><span class="legend-swatch blue"></span>Speaking At</span>
+      <span><span class="legend-swatch gold"></span>Hosting (golden, VD mark)</span>
+      <span><span class="legend-swatch red"></span>Not Attending</span>
+      <span><span class="legend-line"></span>Current date column</span>
+      <span>Search to locate &amp; highlight an event — clicking a bar (admin only) opens Edit</span>
+    </div>
+
+    <div class="calendar-wrapper">
+      <div class="calendar-grid-wrap"><div class="calendar-grid" id="calendarGrid"></div></div>
+    </div>
+
+    <div id="bottomMonthNav">
+      <button class="pill-btn" id="prevMonthBtn" type="button">&larr; Previous Month</button>
+      <button class="pill-btn" id="nextMonthBtn" type="button">Next Month &rarr;</button>
+    </div>
+  </div>
+
+  <div id="unknownSection">
+    <div id="unknownSectionLabel" class="label-mono" style="font-size:0.72em; border-bottom:1px solid var(--hairline); padding-bottom:6px;">Unknown Date / Location — Events Table</div>
+    <p class="page-subtitle" style="max-width: none;">Events without a location, or without a fixed calendar day, are listed here instead of on the calendar. Order: known date &amp; unknown location first (chronological), then known month/unknown day, then fully unannounced dates last.</p>
+    <div style="overflow-x:auto;">
+      <table class="unknown-table" id="unknownTable">
+        <thead><tr><th>Event Name</th><th>Status</th><th>Known Date Info</th><th>Country / Location</th><th>Category</th><th>Link</th></tr></thead>
+        <tbody id="unknownTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<footer id="siteFooter">VD Law Group — Internal use only. Data stored locally in this browser.</footer>
+
+<div class="event-tooltip" id="eventTooltip"></div>
+
+<div class="modal-overlay" id="loginModal">
+  <div class="modal-box">
+    <h2 class="serif-display">Admin Access.</h2>
+    <div class="form-row"><label>Admin Token</label><input type="password" id="loginPasswordInput" placeholder="Enter admin password"></div>
+    <div class="error-msg" id="loginError"></div>
+    <div class="modal-actions">
+      <button class="pill-btn" data-close="loginModal">Cancel</button>
+      <button class="pill-btn solid" id="loginSubmitBtn">Continuă</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="changePwModal">
+  <div class="modal-box">
+    <h2 class="serif-display">Change Password.</h2>
+    <div class="form-row"><label>Current Password</label><input type="password" id="currentPwInput"></div>
+    <div class="form-row"><label>New Password</label><input type="password" id="newPwInput"></div>
+    <div class="form-row"><label>Confirm New Password</label><input type="password" id="confirmPwInput"></div>
+    <div class="error-msg" id="changePwError"></div>
+    <div class="modal-actions">
+      <button class="pill-btn" data-close="changePwModal">Cancel</button>
+      <button class="pill-btn solid" id="changePwSubmitBtn">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="eventModal">
+  <div class="modal-box">
+    <h2 class="serif-display" id="eventModalTitle">Add Event.</h2>
+    <input type="hidden" id="eventIdInput">
+    <div class="form-row"><label>Event Name</label><input type="text" id="eventNameInput" placeholder="e.g. Fintech Regulation Summit"></div>
+
+    <div class="form-row">
+      <label>Start Date</label>
+      <div class="date-field-row">
+        <input type="text" class="date-field-display" id="eventStartDisplay" readonly placeholder="Not set">
+        <div class="date-picker-trigger" id="openDatePickerBtn" title="Open calendar">
+          <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="3" x2="8" y2="7"/><line x1="16" y1="3" x2="16" y2="7"/></svg>
+        </div>
+      </div>
+      <input type="hidden" id="eventStartInput">
+      <input type="hidden" id="eventEndInput">
+    </div>
+
+    <div class="form-row">
+      <label>End Date</label>
+      <div class="date-field-row"><input type="text" class="date-field-display" id="eventEndDisplay" readonly placeholder="Not set"></div>
+      <div class="hint-msg">Use the calendar icon above to select both start and end dates together.</div>
+    </div>
+
+    <div class="form-row">
+      <label>Category</label>
+      <select id="eventCategorySelect"></select>
+      <div class="new-cat-row"><input type="text" id="newCategoryInput" placeholder="Add new category..."><button class="pill-btn" id="addCategoryBtn" type="button">Add</button></div>
+    </div>
+    <div class="form-row">
+      <label>Country</label>
+      <select id="eventCountrySelect"></select>
+      <div class="new-cat-row"><input type="text" id="newCountryInput" placeholder="Add new country..."><button class="pill-btn" id="addCountryBtn" type="button">Add</button></div>
+    </div>
+    <div class="form-row"><label>Event Website / Link</label><input type="url" id="eventLinkInput" placeholder="https://..."></div>
+    <div class="form-row"><label>Notes / Description</label><textarea id="eventNotesInput" rows="3" placeholder="Optional details..."></textarea></div>
+
+    <div class="form-row">
+      <label class="note-field-label">Private Note (pink tab on calendar)</label>
+      <textarea id="eventNoteInput" rows="2" placeholder="Shown in italics, pink, only on hover..."></textarea>
+      <div class="hint-msg">If filled in, a small pink tab appears on the bottom-left of the event bar. Hovering shows this note in pink italics inside the tooltip.</div>
+    </div>
+
+    <div class="form-row" id="manualTagsRow" style="display:none;">
+      <label>Manual Tab Assignment (Admin Only)</label>
+      <div class="manual-list">
+        <label><input type="checkbox" id="tagSignedUp"> Signed Up (bar turns light green)</label>
+        <label><input type="checkbox" id="tagSpeakingAt"> Speaking At (bar turns subtle blue)</label>
+        <label><input type="checkbox" id="tagHosting"> Hosting (bar turns golden + VD mark)</label>
+        <label><input type="checkbox" id="tagNotAttending"> Not Attending (bar turns faded red, text dimmed)</label>
+      </div>
+      <div class="hint-msg">International tab is assigned automatically based on country (non-Romania).</div>
+    </div>
+    <div class="error-msg" id="eventFormError"></div>
+    <div class="modal-actions">
+      <button class="pill-btn" data-close="eventModal">Cancel</button>
+      <button class="pill-btn solid" id="eventSubmitBtn">Save Event</button>
+    </div>
+  </div>
+</div>
+
+<div class="datepicker-overlay" id="datepickerOverlay">
+  <div class="datepicker-box">
+    <div class="datepicker-header-row">
+      <span class="datepicker-title serif-display">Select Dates.</span>
+      <div class="datepicker-mode-toggle">
+        <button class="pill-btn small" id="dpModeDayBtn" type="button">Pick Days</button>
+        <button class="pill-btn small" id="dpModeUnknownBtn" type="button">Unknown Date</button>
+      </div>
+    </div>
+    <div id="dpDayModeView"><div class="datepicker-months-wrap" id="dpMonthsWrap"></div></div>
+    <div id="dpUnknownModeView" style="display:none;">
+      <p class="hint-msg" style="margin-bottom:10px;">Select only a month and/or year if the exact day is not yet known. Confirming here moves the event into the "Unknown Date/Location" tab.</p>
+      <div style="display:flex; gap:24px; flex-wrap:wrap;">
+        <div style="flex:1; min-width:220px;">
+          <div class="label-mono" style="margin-bottom:8px;">Month (optional)</div>
+          <div class="datepicker-quickpick-grid" id="dpMonthGrid"></div>
+        </div>
+        <div style="flex:1; min-width:160px;">
+          <div class="label-mono" style="margin-bottom:8px;">Year</div>
+          <div class="datepicker-quickpick-grid" id="dpYearGrid"></div>
+        </div>
+      </div>
+    </div>
+    <div class="datepicker-footer">
+      <span class="datepicker-selection-summary" id="dpSelectionSummary">No dates selected</span>
+      <div class="datepicker-actions">
+        <button class="pill-btn" id="dpCancelBtn" type="button">Cancel</button>
+        <button class="pill-btn solid" id="dpOkBtn" type="button">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="firstRunModal">
+  <div class="modal-box">
+    <h2 class="serif-display">Site Initialized.</h2>
+    <p style="color: var(--fg-dim); font-size: 0.9em; line-height: 1.5;">A random admin password has been generated for this site. Save it now — it will not be shown again automatically.</p>
+    <div class="form-row"><label>Generated Admin Password</label><input type="text" id="generatedPwDisplay" readonly></div>
+    <div class="modal-actions"><button class="pill-btn solid" data-close="firstRunModal">I Have Saved It</button></div>
+  </div>
+</div>
+
+<script>
+const STORAGE_KEY = "vdlawgroup_events_portal_v15";
+const THEME_KEY = "vdlawgroup_theme_pref";
+
+function randomPassword(length) {
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let out = "";
+  const arr = new Uint32Array(length);
+  window.crypto.getRandomValues(arr);
+  for (let i = 0; i < length; i++) out += chars[arr[i] % chars.length];
+  return out;
+}
+function uid() { return 'e_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 8); }
+
+const DEFAULT_STATE = {"adminPassword": "vu8c0KnY8svM", "firstRunShown": true, "categories": ["Business Development", "Real Estate", "International", "Tech & Crypto", "Med Tech", "Banking"], "countries": ["Austria", "Belgium", "Bulgaria", "Czech Republic", "Denmark", "Finland", "France", "Germany", "Hungary", "Lithuania", "Netherlands", "Norway", "Poland", "Romania", "Singapore", "Spain", "Sweden", "Switzerland", "UAE", "UK", "USA"], "events": [{"name": "Dubai Entrepreneurs Meetup | B2B Networking", "start": "2026-08-07", "end": "2026-08-07", "category": "International", "country": "UAE", "notes": "City: Dubai", "link": "https://www.eventbrite.com/e/dubai-entrepreneurs-meetup-b2b-networking-founders-professionals-tickets-1981566881886", "id": "e_074b50934c", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Introbiz - An Evening of Connection", "start": "2026-08-10", "end": "2026-08-10", "category": "International", "country": "UK", "notes": "City: Londra", "link": "https://introbiz.co.uk/networking-events/", "id": "e_e30d0732e8", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Speed Connect | B2B Networking", "start": "2026-08-12", "end": "2026-08-12", "category": "International", "country": "UAE", "notes": "City: Dubai", "link": "https://www.eventbrite.com/e/speed-connect-b2b-networking-for-founders-business-professionals-tickets-1749855899099", "id": "e_2b6e7cd3f4", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Navigating Global Market Opportunities with Equity Indices Futures", "start": "2026-08-20", "end": "2026-08-20", "category": "International", "country": "Singapore", "notes": "City: Singapore", "link": "https://www.eventbrite.sg/e/navigating-global-market-opportunities-with-equity-indices-futures-tickets-1993902590322", "id": "e_e374c0fa32", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Devcom", "start": "2026-08-23", "end": "2026-08-25", "category": "International", "country": "Germany", "notes": "City: Cologne", "link": "https://dev.gamescom.global/", "id": "e_6c25b3ca64", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Bitcoin/Altcoins & Cryptocurrency Enthusiast Night - Crypto Gathering", "start": "2026-08-24", "end": "2026-08-24", "category": "International", "country": "USA", "notes": "City: New York", "link": "https://allevents.in/new-york/bitcoin-altcoins-and-cryptocurrency-enthusiast-night-crypto-gathering/100001981206450827", "id": "e_6813e4e017", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Fintech Revolution Summit", "start": "2026-08-26", "end": "2026-08-26", "category": "International", "country": "Singapore", "notes": "City: Singapore", "link": "https://allevents.in/singapore/fintech-revolution-summit-singapore-tickets/80002275648297", "id": "e_37eb43ca3d", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "techbbq", "start": "2026-08-26", "end": "2026-08-27", "category": "International", "country": "Denmark", "notes": "City: Copenhaga", "link": "https://techbbq.dk/about-us//", "id": "e_a14d763ac9", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "The Business Show Asia", "start": "2026-08-26", "end": "2026-08-27", "category": "International", "country": "Singapore", "notes": "City: Singapore", "link": "https://allevents.in/singapore/the-business-show-asia-free-tickets/80009542404663", "id": "e_53b32b540c", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Gamescom", "start": "2026-08-26", "end": "2026-08-30", "category": "International", "country": "Germany", "notes": "City: Cologne", "link": "https://www.gamescom.global/en", "id": "e_ae826f27b8", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Cyber Security Summit 2026 - Copenhagen", "start": "2026-08-27", "end": "2026-08-27", "category": "International", "country": "Denmark", "notes": "City: Copenhaga", "link": "https://computerworldevents.dk/1626/cyber-security-summit-koebenhavn_26", "id": "e_665eae86b2", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "TECHSPO Singapore 2026 Technology Expo (Internet ~ AdTech ~ MarTech)", "start": "2026-08-27", "end": "2026-08-28", "category": "International", "country": "Singapore", "notes": "City: Singapore", "link": "https://www.eventbrite.com/e/techspo-singapore-2026-technology-expo-internet-adtech-martech-tickets-1653516284719", "id": "e_dcfb00bf9c", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Unchained Summit Dubai", "start": "2026-09-07", "end": "2026-09-08", "category": "International", "country": "UAE", "notes": "City: Dubai", "link": "https://allevents.in/dubai/unchained-summit-dubai/100001992905011537", "id": "e_9581a23390", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Nordic Tech Week", "start": "2026-09-07", "end": "2026-09-11", "category": "International", "country": "Sweden", "notes": "City: Stockholm", "link": "https://www.nordictechweek.org/", "id": "e_8c4a5dcbb7", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Aternoon Tea at The Future Inn Cardiff", "start": "2026-09-11", "end": "2026-09-11", "category": "International", "country": "UK", "notes": "City: Londra", "link": "https://introbiz.co.uk/networking-events/", "id": "e_25d16b852d", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "ARABIAN BUSINESS EXPO", "start": "2026-09-12", "end": "2026-09-12", "category": "International", "country": "UAE", "notes": "City: Dubai", "link": "https://www.eventbrite.com/e/arabian-business-expo-networking-for-founders-investors-tickets-1975081307358", "id": "e_c984c95101", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "The Digital Economy Expo 2026", "start": "2026-09-15", "end": "2026-09-17", "category": "International", "country": "Singapore", "notes": "City: Singapore", "link": "https://allevents.in/singapore/the-digital-economy-expo-2026/100001988937311038", "id": "e_13218100a7", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "European Blockchain Convention 12", "start": "2026-09-16", "end": "2026-09-17", "category": "International", "country": "Spain", "notes": "City: Spania Barcelona", "link": "https://eblockchainconvention.com/european-blockchain-convention-12/", "id": "e_ec13b09a78", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "European Manufacturing Conference", "start": "2026-09-16", "end": "2026-09-17", "category": "International", "country": "Belgium", "notes": "City: Brussels", "link": "https://www.eit.europa.eu/news-events/events/european-manufacturing-conference-2026", "id": "e_23eab2cfb8", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Startup Fair", "start": "2026-09-17", "end": "2026-09-17", "category": "International", "country": "Lithuania", "notes": "City: Vilnius", "link": "https://www.startupfair.lt/", "id": "e_cdfc1e4c40", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "SHRM MENA Annual Conference & Expo", "start": "2026-09-17", "end": "2026-09-18", "category": "International", "country": "UAE", "notes": "City: Dubai", "link": "https://allevents.in/dubai/shrm-mena-annual-conference-and-expo-2026/200030271443351", "id": "e_f8e3a2c0a0", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Civo Navigate London", "start": "2026-09-22", "end": "2026-09-22", "category": "International", "country": "UK", "notes": "City: Londra", "link": "https://www.civo.com/navigate/london/2026", "id": "e_a5be308d33", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "An Afternoon of Connection London", "start": "2026-09-24", "end": "2026-09-24", "category": "International", "country": "UK", "notes": "City: Londra", "link": "https://introbiz.co.uk/networking-events/", "id": "e_94ec56f2a0", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "SuperReturn Asia", "start": "2026-09-27", "end": "2026-10-01", "category": "International", "country": "Singapore", "notes": "City: Singapore", "link": "https://informaconnect.com/superreturnasia/", "id": "e_19f065355e", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Bits & Pretzels", "start": "2026-09-28", "end": "2026-09-30", "category": "International", "country": "Germany", "notes": "City: Munich", "link": "https://www.bitsandpretzels.com/", "id": "e_d921b769bc", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Sibos", "start": "2026-09-28", "end": "2026-10-01", "category": "International", "country": "USA", "notes": "City: Miami", "link": "https://www.sibos.com/", "id": "e_3e8d6374d5", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Tech Week Singapore 2026", "start": "2026-09-29", "end": "2026-09-30", "category": "International", "country": "Singapore", "notes": "City: Singapore", "link": "https://allevents.in/singapore/tech-week-singapore-2026/100001984606892640", "id": "e_b775d63d55", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Sifted Summit", "start": "2026-09-30", "end": "2026-10-01", "category": "International", "country": "UK", "notes": "City: Londra", "link": "https://summit.sifted.eu/", "id": "e_9504c3eb0a", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Innovation Week Prague", "start": "2026-10-01", "end": "2026-10-03", "category": "International", "country": "Czech Republic", "notes": "City: Praga", "link": "https://www.innovationweek.ai/startups", "id": "e_10b2cccd72", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "World AI Expo 2026", "start": "2026-10-07", "end": "2026-10-08", "category": "International", "country": "UAE", "notes": "City: Dubai", "link": "https://allevents.in/dubai/world-ai-expo-2026-dubai/300041473784", "id": "e_ecf15b4453", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Unlock VC", "start": "2026-10-07", "end": "2026-10-09", "category": "International", "country": "Spain", "notes": "City: Barcelona", "link": "https://unlock-vc.com/summit-2026", "id": "e_1117479812", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "AI-Pulse", "start": "2026-10-13", "end": "2026-10-13", "category": "International", "country": "France", "notes": "City: Paris", "link": "https://www.ai-pulse.eu/", "id": "e_affebc9432", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "TechCrunch Disrupt", "start": "2026-10-13", "end": "2026-10-15", "category": "International", "country": "USA", "notes": "City: San Francisco", "link": "https://techcrunch.com/events/", "id": "e_c03d611862", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Norrsken Impact Week", "start": "2026-10-14", "end": "2026-10-15", "category": "International", "country": "Spain", "notes": "City: Barceona", "link": "https://www.norrsken.org/impactweek", "id": "e_1aa65b9fe6", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "AustrianStartups Summit", "start": "2026-10-15", "end": "2026-10-15", "category": "International", "country": "Austria", "notes": "City: Vienna", "link": "https://austrianstartups.com/events/202653", "id": "e_26da5cf925", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Oslo Innovation Week", "start": "2026-10-19", "end": "2026-10-23", "category": "International", "country": "Norway", "notes": "City: Oslo", "link": "https://www.oiw.no/", "id": "e_5837ac6fa2", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Cloud & Cyber Security Expo", "start": "2026-10-20", "end": "2026-10-21", "category": "International", "country": "Germany", "notes": "City: Frankfurt", "link": "https://cybersecuritycloudexpo.com/europe/", "id": "e_7612cc397f", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "High Tech Ventures Days", "start": "2026-10-20", "end": "2026-10-21", "category": "International", "country": "Germany", "notes": "City: Dresden", "link": "https://www.hightech-venture-days.com/home/htvd-eu/", "id": "e_5ba3ed4fa6", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "IoT Tech Expo", "start": "2026-10-20", "end": "2026-10-21", "category": "International", "country": "UK", "notes": "City: Londra", "link": "https://www.iottechexpo.com/global/", "id": "e_116fd36bee", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Pocket Gamer Connects Nordics", "start": "2026-10-20", "end": "2026-10-21", "category": "International", "country": "Finland", "notes": "City: Helsinki", "link": "https://www.pgconnects.com/nordics/", "id": "e_8d64303fe0", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "NVIDIA GTC", "start": "2026-10-20", "end": "2026-10-22", "category": "International", "country": "Germany", "notes": "City: Berlin", "link": "https://www.nvidia.com/en-eu/gtc/?regcode=no-ncid&ncid=no-ncid", "id": "e_fb85b3577c", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Engaged Investment Conference", "start": "2026-10-21", "end": "2026-10-22", "category": "International", "country": "Czech Republic", "notes": "City: Praga", "link": "https://engaged.investments/", "id": "e_794f1fc1d5", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Webit Summer Edition", "start": "2026-10-23", "end": "2026-10-23", "category": "International", "country": "Bulgaria", "notes": "City: Sofia", "link": "https://www.webit.org/festival-europe/index.php", "id": "e_7677addd2e", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Deep Tech CEE Summit & Challenge", "start": "2026-10-26", "end": "2026-10-27", "category": "International", "country": "Poland", "notes": "City: Varsovia", "link": "https://deeptechsummit.eu/cee-challenge-2026/", "id": "e_6ed2154778", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "An Afternoon of Connection London", "start": "2026-10-29", "end": "2026-10-29", "category": "International", "country": "UK", "notes": "City: Londra", "link": "https://introbiz.co.uk/networking-events/", "id": "e_456a7692ab", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Tomorrow.Mobility", "start": "2026-11-03", "end": "2026-11-05", "category": "International", "country": "Spain", "notes": "City: Barcelona", "link": "https://www.tomorrowmobility.com/", "id": "e_1e774c3c0d", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Startup Nights", "start": "2026-11-05", "end": "2026-11-06", "category": "International", "country": "Switzerland", "notes": "City: Winterthur", "link": "https://www.startup-nights.ch/", "id": "e_899d59e80c", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Digital Assets Forum 1", "start": "2026-11-13", "end": "2026-11-13", "category": "International", "country": "USA", "notes": "City: New York", "link": "https://eblockchainconvention.com/digital-assets-forum-new-york/", "id": "e_0ccb085dab", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "MeOut Summit 2026", "start": "2026-11-25", "end": "2026-11-26", "category": "International", "country": "Hungary", "notes": "City: Budapesta", "link": "https://www.linkedin.com/events/7468607786550136832/", "id": "e_a6d9a75ff2", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Blockchain Life 2026", "start": "2026-12-01", "end": "2026-12-02", "category": "International", "country": "UAE", "notes": "City: Dubai", "link": "https://allevents.in/dubai/blockchain-life-2026/2600029674546156", "id": "e_d5b8598d5e", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "An Afternoon of Connection London", "start": "2026-12-04", "end": "2026-12-04", "category": "International", "country": "UK", "notes": "City: Londra", "link": "https://introbiz.co.uk/networking-events/", "id": "e_0936efb8bb", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "UnitedXR", "start": "2026-12-07", "end": "2026-12-09", "category": "International", "country": "Belgium", "notes": "City: Brussels", "link": "https://unitedxr.eu/", "id": "e_e8582e56d7", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Expand North Star", "start": "2026-12-07", "end": "2026-12-10", "category": "International", "country": "UAE", "notes": "City: Dubai", "link": "https://expandnorthstar.com/", "id": "e_1f0e30220d", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Future Blockchain Summit", "start": "2026-12-08", "end": "2026-12-10", "category": "International", "country": "UAE", "notes": "City: Dubai", "link": "https://www.gitexfdx.com/", "id": "e_edc3d17319", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Dubai B2B Growth Expo 2026", "start": "2026-12-09", "end": "2026-12-10", "category": "International", "country": "UAE", "notes": "City: Dubai", "link": "https://allevents.in/dubai/dubai-b2b-growth-expo-2026-become-a-speaker-at-a-premier-b2b-show-tickets/80007656154538", "id": "e_20c458e9a7", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "CloudBrew", "start": "2026-12-10", "end": "2026-12-11", "category": "International", "country": "Belgium", "notes": "City: Lamot", "link": "https://www.cloudbrew.be/", "id": "e_0854a2db05", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Digital Assets Forum 4", "start": "2027-02-01", "end": "2027-02-02", "category": "International", "country": "UK", "notes": "City: UK Londra", "link": "https://eblockchainconvention.com/digital-assets-forum/", "id": "e_0fe8258f64", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Integrated Systems Europe", "start": "2027-02-03", "end": "2027-02-05", "category": "International", "country": "Spain", "notes": "City: Barcelona", "link": "https://www.iseurope.org/", "id": "e_3e2301e5ba", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "E-world energy & water", "start": "2027-02-16", "end": "2027-02-18", "category": "International", "country": "Germany", "notes": "City: Essen", "link": "https://e-world-essen.com/", "id": "e_138185c919", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Business Innovation Expo", "start": "2027-02-23", "end": "2027-02-24", "category": "International", "country": "UK", "notes": "City: Londra", "link": "https://www.businessrevivalseries.co.uk/", "id": "e_2df86fb00d", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "APE 2027 - Asia Photonics Expo", "start": "2027-03-03", "end": "2027-03-05", "category": "International", "country": "Singapore", "notes": "City: Singapore", "link": "https://allevents.in/singapore/ape-2027-asia-photonics-expo/100001985350469699", "id": "e_5762c01886", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Blockchain Festival 2027 Singapore", "start": "2027-03-27", "end": "2027-03-27", "category": "International", "country": "Singapore", "notes": "City: Singapore", "link": "https://allevents.in/singapore/blockchain-festival-2027-singapore-event-27-march-free-expo-and-conference/10000867282564497", "id": "e_9d6b6753d2", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Traders Fair 2027 - Singapore", "start": "2027-03-27", "end": "2027-03-27", "category": "International", "country": "Singapore", "notes": "City: Singapore", "link": "https://allevents.in/singapore/traders-fair-2027-singapore-27-march-financial-education-event/10000862918531557", "id": "e_2310f4d2de", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Compute Summit", "start": "2027-04-07", "end": "2027-04-08", "category": "International", "country": "Spain", "notes": "City: Bilbao", "link": "https://computesummit.com/", "id": "e_ba016dbb34", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Laval Virtual", "start": "2027-04-07", "end": "2027-04-09", "category": "International", "country": "France", "notes": "City: Laval", "link": "https://laval-virtual.com/en/", "id": "e_77a81eedea", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "ethcc", "start": "2027-04-12", "end": "2027-04-15", "category": "International", "country": "France", "notes": "City: Cannes", "link": "https://ethcc.io/", "id": "e_4fff009c00", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Token 2049 Dubai", "start": "2027-04-21", "end": "2027-04-22", "category": "International", "country": "UAE", "notes": "City: Dubai", "link": "https://www.token2049.com/dubai", "id": "e_1b47586e69", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Ecosummit", "start": "2027-05-12", "end": "2027-05-12", "category": "International", "country": "Germany", "notes": "City: Berlin", "link": "https://ecosummit.ai/", "id": "e_d78220f409", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Money20/20 Europe", "start": "2027-06-08", "end": "2027-06-10", "category": "International", "country": "Netherlands", "notes": "City: Amsterdam", "link": "https://europe.money2020.com/attend", "id": "e_d59259aef9", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "The AI Summit London", "start": "2027-06-09", "end": "2027-06-10", "category": "International", "country": "UK", "notes": "City: Londra", "link": "https://london.theaisummit.com/", "id": "e_0bac028c51", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "AI Engineer World's Fair", "start": "2027-06-29", "end": "2027-07-02", "category": "International", "country": "USA", "notes": "City: San Francisco", "link": "https://www.ai.engineer/worldsfair/2027", "id": "e_e0087923a1", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Signal Week", "start": "2027-07-06", "end": "2027-07-07", "category": "International", "country": "France", "notes": "City: Paris", "link": "https://signalweek.com/", "id": "e_db0c10a323", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Industry 4.0 and Digital Transformation Strategies (ICI4DTS-26)", "start": "2026-08-08", "end": "2026-08-09", "category": "Tech & Crypto", "country": "Romania", "notes": "City: Bucuresti; Topic: Intern", "link": "https://igaeglobal.com/conf/paper.php?id=100744234", "id": "e_c89a748260", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "International Conference on Technology Entrepreneurship and Emerging Economies", "start": "2026-08-10", "end": "2026-08-11", "category": "Tech & Crypto", "country": "Romania", "notes": "City: Timisoara; Topic: Intern", "link": "https://scienceleagues.com/payment/lis_index.php?id=100771589", "id": "e_7b2f9ffe7d", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "International Conference on Digital Transformation and Competitive Advantage (ICDTCA - 26)", "start": "2026-08-21", "end": "2026-08-22", "category": "Tech & Crypto", "country": "Romania", "notes": "City: Bucuresti; Topic: Intern", "link": "https://scholarsforum.net/payment/list_index.php?id=100767357", "id": "e_3d8066d82d", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "International Conference on Big Data Applications in E-Commerce", "start": "2026-08-28", "end": "2026-08-29", "category": "Tech & Crypto", "country": "Romania", "notes": "City: Brasov; Topic: Intern", "link": "https://Internationalconferencealerts.com/event-icbdaec-constanta-ro-202609-101145488", "id": "e_02ee700693", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Search Evolution Summit 2026 – SEO, AI Search & Search Technology", "start": "2026-09-02", "end": "2026-09-04", "category": "Tech & Crypto", "country": "Romania", "notes": "City: Cluj-Napoca; Topic: AI & Search Technology", "link": "https://www.reddit.com/r/marketingRO/comments/1uknnqp/", "id": "e_70327d80f5", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "International Conference on E-Commerce Logistics and Supply Chain Integration", "start": "2026-09-03", "end": "2026-09-04", "category": "Tech & Crypto", "country": "Romania", "notes": "City: Bucuresti; Topic: Intern", "link": "https://Internationalconferencealerts.com/event-iceclsci-bucharest-ro-202609-101136804", "id": "e_b01378d88b", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "International Conference on Innovation and Technology in International Business", "start": "2026-09-07", "end": "2026-09-08", "category": "Tech & Crypto", "country": "Romania", "notes": "City: Bucuresti; Topic: Intern", "link": "https://Internationalconferencealerts.com/event-icitib-bucharest-ro-202609-101130298", "id": "e_e235f6e21a", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Biz Leadership Summit 2026", "start": "2026-09-10", "end": "2026-09-10", "category": "Tech & Crypto", "country": "Romania", "notes": "City: Bucuresti TERRA Events Hall; Topic: retail, FMCG, energie, servicii financiare, antreprenoriat, industrie si business premium", "link": "https://allevents.in/bucharest/biz-leadership-summit-2026/200030333754712", "id": "e_21786138c3", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "SYNASC 2026 – Symbolic and Numeric Algorithms for Scientific Computing", "start": "2026-09-14", "end": "2026-09-17", "category": "Tech & Crypto", "country": "Romania", "notes": "City: Timișoara; Topic: AI, algoritmi & scientific computing", "link": "https://synasc.ro/2026/", "id": "e_9abbe402fe", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "X MARKS THE SCALE | InnovX Community Event", "start": "2026-09-21", "end": "2026-09-21", "category": "Tech & Crypto", "country": "Romania", "notes": "City: Bucuresti; Topic: Intern", "link": "https://www.eventbrite.com/e/x-marks-the-scale-innovx-community-event-tickets-1991906662448", "id": "e_a8abb380c7", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "AWSummit Bucharest 2026", "start": "2026-09-21", "end": "2026-09-23", "category": "Tech & Crypto", "country": "Romania", "notes": "City: București – Face Convention Center; Topic: Digital business, affiliate tech & e-commerce", "link": "https://awsummit.com/events/bucharest/main/", "id": "e_5a00132671", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "devdays 2026", "start": "2026-09-21", "end": "2026-09-23", "category": "Tech & Crypto", "country": "Romania", "notes": "City: Iași; Topic: Software engineering, cloud & AI", "link": "https://sessionize.com/devdays-2026/", "id": "e_9832122182", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "BlackSeaCon 2026", "start": "2026-09-22", "end": "2026-09-23", "category": "Tech & Crypto", "country": "Romania", "notes": "City: România – locație de reconfirmat; Topic: Digital trade, eFTI & logistics tech", "link": "https://blackseacon.org/", "id": "e_2e9afcbaac", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Forbes Romania CEE Forum 2026", "start": "2026-09-22", "end": "2026-09-24", "category": "Tech & Crypto", "country": "Romania", "notes": "City: Bucuresti Nord Events Center By Globalworth; Topic: Domeniul financiar și de afaceri.", "link": "https://allevents.in/bucharest/forbes-romania-cee-forum-2026-at-the-turning-point/200029781115132", "id": "e_af79543a94", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Cyber-AI 2026", "start": "2026-09-22", "end": "2026-09-25", "category": "Tech & Crypto", "country": "Romania", "notes": "City: București – Universitatea Româno-Americană; Topic: AI & cybersecurity", "link": "https://cyber-ai.org/", "id": "e_c61f48903b", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "EXPO RETAIL 2026 – Digital, Green & Tech", "start": "2026-09-23", "end": "2026-09-24", "category": "Tech & Crypto", "country": "Romania", "notes": "City: București; Topic: RetailTech, e-commerce & automation", "link": "https://expo-retail.com/", "id": "e_b1ea8a30a0", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "International Conference on Management and Information Technology (ICMIT)", "start": "2026-09-23", "end": "2026-09-24", "category": "Tech & Crypto", "country": "Romania", "notes": "City: Bucuresti; Topic: Intern", "link": "https://10times.com/icmit-bucharest", "id": "e_a23c9d826f", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "DevTalks Cluj-Napoca 2026", "start": "2026-09-24", "end": "2026-09-24", "category": "Tech & Crypto", "country": "Romania", "notes": "City: Cluj-Napoca – CREIC / Cluj Innovation Park; Topic: Software, cloud, data & AI", "link": "https://www.devtalks.ro/cluj", "id": "e_c7a653e4f6", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "eCommerce Talks 2026", "start": "2026-09-24", "end": "2026-09-24", "category": "Tech & Crypto", "country": "Romania", "notes": "City: București; Topic: E-commerce technology & automation", "link": "https://ecommerce-talks.com/", "id": "e_36f5ce9734", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "ENERGY EXPO", "start": "2026-09-24", "end": "2026-09-26", "category": "Tech & Crypto", "country": "Romania", "notes": "City: Bucuresti Romaero; Topic: tehnologii energetice de ultimă generație", "link": "https://allevents.in/bucharest/energy-expo-2026/200029375234153", "id": "e_9653cc6ac7", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "International Conference on Artificial Intelligence in Business Decision-Making", "start": "2026-09-26", "end": "2026-09-27", "category": "Tech & Crypto", "country": "Romania", "notes": "City: Timisoara; Topic: Intern", "link": "https://Internationalconferencealerts.com/event-icaibdm-timisoara-ro-202609-101108598", "id": "e_1199728039", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "International Conference on Big Data Applications in E-Commerce", "start": "2026-09-26", "end": "2026-09-27", "category": "Tech & Crypto", "country": "Romania", "notes": "City: Constanta; Topic: Intern", "link": "https://Internationalconferencealerts.com/event-icbdaec-constanta-ro-202609-101145488", "id": "e_45cddf5f32", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "RONOG 11 – Romanian Network Operators Group", "start": "2026-09-29", "end": "2026-09-29", "category": "Tech & Crypto", "country": "Romania", "notes": "City: București; Topic: Internet infrastructure, networking & telecom", "link": "https://www.ronog.ro/", "id": "e_1ac0fa19b5", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "International Conference on Payment Systems and Digital Currencies", "start": "2026-09-29", "end": "2026-09-30", "category": "Tech & Crypto", "country": "Romania", "notes": "City: Bucuresti; Topic: Intern", "link": "https://Internationalconferencealerts.com/event-icpsdc-bucharest-ro-202609-101136813", "id": "e_740e1b15c8", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Product Circle – Builders Bucharest", "start": "2026-10-03", "end": "2026-10-03", "category": "Tech & Crypto", "country": "Romania", "notes": "City: București; Topic: Product, startups & software", "link": "https://www.productcircle.co/events", "id": "e_198c1abc78", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Big Data Week Bucharest 2026", "start": "2026-10-06", "end": "2026-10-07", "category": "Tech & Crypto", "country": "Romania", "notes": "City: București; Topic: Big Data, analytics & AI", "link": "https://bucharest.bigdataweek.com/", "id": "e_e90dc6cea5", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "How to Web Conference 2026", "start": "2026-10-06", "end": "2026-10-08", "category": "Tech & Crypto", "country": "Romania", "notes": "City: București; Topic: Startups, venture capital & technology", "link": "https://www.howtoweb.co/", "id": "e_c7c511eeae", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "ICCCC 2026 – International Conference on Computers, Communications & Control", "start": "2026-10-06", "end": "2026-10-09", "category": "Tech & Crypto", "country": "Romania", "notes": "City: Oradea; Topic: Computer science, communications & control", "link": "https://www.univagora.ro/en/conferinte/icccc/icccc2026/", "id": "e_2d6ddeffaa", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "FACTORY 4.0 Conference 2026", "start": "2026-10-07", "end": "2026-10-07", "category": "Tech & Crypto", "country": "Romania", "notes": "City: București; Topic: Industry 4.0, automation & robotics", "link": "https://factory40.ro/2026/", "id": "e_41c0f87b7c", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "NRCC CRYPTO OUTLOOK 2026", "start": "2026-10-07", "end": "2026-10-07", "category": "Tech & Crypto", "country": "Romania", "notes": "City: Bucuresti; Topic: Intern", "link": "https://www.nrcc.ro/events/nrcc-crypto-outlook-2026", "id": "e_f999402abc", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Smart City Highlights 2026", "start": "2026-10-07", "end": "2026-10-07", "category": "Tech & Crypto", "country": "Romania", "notes": "City: București – POLITEHNICA București; Topic: Smart cities, IoT & urban innovation", "link": "https://citicluster.upb.ro/smart-city-highlights/", "id": "e_8df81bc97e", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Future Banking Summit 2026", "start": "2026-10-07", "end": "2026-10-09", "category": "Tech & Crypto", "country": "Romania", "notes": "City: București; Topic: FinTech, digital banking & AI", "link": "https://ic.events/future-banking-summit", "id": "e_dd832016e7", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "ICAMS 2026 – International Conference on Advanced Materials and Systems", "start": "2026-10-08", "end": "2026-10-09", "category": "Tech & Crypto", "country": "Romania", "notes": "City: București; Topic: Advanced materials & industrial technology", "link": "https://www.sciencedz.net/en/conferences/RO-romania", "id": "e_2ff45f4ba9", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "International Conference on E-Business, E-Commerce and Internet", "start": "2026-10-09", "end": "2026-10-10", "category": "Tech & Crypto", "country": "Romania", "notes": "City: Iasi; Topic: Intern", "link": "https://Internationalconferencealerts.com/event-icebeci-lasi-ro-202610-101318433", "id": "e_a1d76f4104", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "GPeC SUMMIT – ediția de toamnă 2026", "start": "2026-10-13", "end": "2026-10-13", "category": "Tech & Crypto", "country": "Romania", "notes": "City: București; Topic: E-commerce, MarTech & AI", "link": "https://www.gpec.ro/en/gpec-summit-october/", "id": "e_8aa2878b47", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Romanian Security Fair 2026", "start": "2026-10-14", "end": "2026-10-16", "category": "Tech & Crypto", "country": "Romania", "notes": "City: București – ROMEXPO; Topic: Security technology, surveillance & access control", "link": "https://10times.com/romanian-security-fair", "id": "e_f1199efde2", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "CAS 2026 – International Semiconductor Conference", "start": "2026-10-14", "end": "2026-10-17", "category": "Tech & Crypto", "country": "Romania", "notes": "City: Sinaia; Topic: Semiconductors, microelectronics & nanotechnology", "link": "https://www.rsc.org/events/find-an-event/international-semiconductor-conference-%E2%80%93-cas-2026", "id": "e_6c0723d7e8", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "ICUSI 2026 – International Conference on User-System Interaction", "start": "2026-10-15", "end": "2026-10-16", "category": "Tech & Crypto", "country": "Romania", "notes": "City: Suceava; Topic: HCI, UX & intelligent interfaces", "link": "https://rochi.utcluj.ro/", "id": "e_8f67b47a20", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Joint MTM & Robotics 2026", "start": "2026-10-15", "end": "2026-10-17", "category": "Tech & Crypto", "country": "Romania", "notes": "City: Timișoara; Topic: Robotics, manufacturing & automation", "link": "https://ifr.org/event/mtm-robotics-2026-international-conference", "id": "e_f70c776f62", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "OmniOpenCon 2026", "start": "2026-10-16", "end": "2026-10-18", "category": "Tech & Crypto", "country": "Romania", "notes": "City: București – POLITEHNICA București; Topic: Open source, software & cloud", "link": "https://sessionize.com/omniopencon-2026/", "id": "e_b5663d2bf5", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Codecamp Cluj-Napoca 2026", "start": "2026-10-20", "end": "2026-10-20", "category": "Tech & Crypto", "country": "Romania", "notes": "City: Cluj-Napoca; Topic: Software development, AI & cloud", "link": "https://codecamp.ro/codecamps/cluj-napoca-2026/", "id": "e_8cfba2a3b0", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Bucharest CyberSecurity Conference 2026", "start": "2026-10-20", "end": "2026-10-22", "category": "Tech & Crypto", "country": "Romania", "notes": "City: București – Halo Events Center; Topic: Cybersecurity, resilience & regulation", "link": "https://bcc.dnsc.ro/", "id": "e_effd1b4e9f", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "ICASC 2026 – Advanced Scientific Computing", "start": "2026-10-21", "end": "2026-10-23", "category": "Tech & Crypto", "country": "Romania", "notes": "City: Cluj-Napoca; Topic: Scientific computing & AI", "link": "https://www.sciencedz.net/en/conferences/RO-romania", "id": "e_13fff2a58d", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "ICSTCC 2026 – International Conference on System Theory, Control and Computing", "start": "2026-10-21", "end": "2026-10-24", "category": "Tech & Crypto", "country": "Romania", "notes": "City: Iași; Topic: Automation, control, AI & computing", "link": "https://ieeecss.org/event/30th-international-conference-system-theory-control-and-computing", "id": "e_fb76a19158", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "AccessABILITY Expo RO 2026", "start": "2026-10-22", "end": "2026-10-23", "category": "Tech & Crypto", "country": "Romania", "notes": "City: București – POLITEHNICA București Event Hall; Topic: Assistive technology & accessibility", "link": "https://www.rdcc.ro/event/accessability-expo/", "id": "e_b0cb3ccdf9", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "ICCP 2026 – Intelligent Computer Communication and Processing", "start": "2026-10-22", "end": "2026-10-24", "category": "Tech & Crypto", "country": "Romania", "notes": "City: Cluj-Napoca; Topic: AI, intelligent systems & communications", "link": "https://iccp.ro/iccp2026/important-dates/", "id": "e_16f6721fea", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "SIMPRO 2026", "start": "2026-10-22", "end": "2026-10-24", "category": "Tech & Crypto", "country": "Romania", "notes": "City: Petroșani; Topic: Industrial engineering, digitalization & sustainability", "link": "https://easychair.org/cfp/SIMPRO2026", "id": "e_7f67b5a459", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "SIITME 2026 – IEEE Symposium for Design and Technology in Electronic Packaging", "start": "2026-10-28", "end": "2026-10-31", "category": "Tech & Crypto", "country": "Romania", "notes": "City: Târgoviște / Hibrid; Topic: Electronics, advanced packaging & emerging systems", "link": "https://siitme.ro/", "id": "e_90897ec88f", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Codecamp Iași 2026", "start": "2026-10-29", "end": "2026-10-29", "category": "Tech & Crypto", "country": "Romania", "notes": "City: Iași; Topic: Software development, cloud & AI", "link": "https://codecamp.ro/", "id": "e_06575419c1", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "International Management Conference – Management in an Age of Intelligent Systems and Human Values", "start": "2026-10-29", "end": "2026-10-30", "category": "Tech & Crypto", "country": "Romania", "notes": "City: București; Topic: AI governance, management & digital transformation", "link": "https://easychair.org/cfp/imc2026", "id": "e_37a00dd166", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "GTR Romania Trade & Export Finance Conference 2026", "start": "2026-10-30", "end": "2026-10-30", "category": "Tech & Crypto", "country": "Romania", "notes": "City: București – InterContinental Athénée Palace; Topic: FinTech, trade finance & digital payments", "link": "https://www.gtreview.com/events/europe/romania-trade-export-finance-conference-2/", "id": "e_2f913ac11c", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Prow 2026", "start": "2026-10-30", "end": "2026-10-30", "category": "Tech & Crypto", "country": "Romania", "notes": "City: Timișoara; Topic: Software product development & engineering", "link": "https://prow.ro/", "id": "e_dd34af2683", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "RoboChallenge 2026", "start": "2026-10-30", "end": "2026-11-01", "category": "Tech & Crypto", "country": "Romania", "notes": "City: București – POLITEHNICA București; Topic: Robotics, autonomous systems & education", "link": "https://robochallenge.ro/about", "id": "e_cb3a4d5a7c", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "AI Expo Europe 2026", "start": "2026-11-01", "end": "2026-11-02", "category": "Tech & Crypto", "country": "Romania", "notes": "City: București – Radisson Blu; Topic: Artificial intelligence & emerging technologies", "link": "https://aiexpoeurope.com/", "id": "e_d6e57b3266", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "DevCon 2026", "start": "2026-11-04", "end": "2026-11-05", "category": "Tech & Crypto", "country": "Romania", "notes": "City: București – NORD Events Center; Topic: Software, AI, IoT, quantum & hardware", "link": "https://www.dev-con.ro/", "id": "e_ad41d251ac", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Product Circle – Builders Cluj-Napoca", "start": "2026-11-07", "end": "2026-11-07", "category": "Tech & Crypto", "country": "Romania", "notes": "City: Cluj-Napoca; Topic: Product management, startups & technology", "link": "https://www.productcircle.co/events", "id": "e_f99ed20673", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "GoTech World 2026", "start": "2026-11-10", "end": "2026-11-11", "category": "Tech & Crypto", "country": "Romania", "notes": "City: București – ROMEXPO; Topic: Enterprise technology, AI, cloud & cybersecurity", "link": "https://www.gotech.world/ro/event-details/2026-gotech-world", "id": "e_3eac9728a0", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "IT Days 2026", "start": "2026-11-11", "end": "2026-11-12", "category": "Tech & Crypto", "country": "Romania", "notes": "City: Cluj-Napoca; Topic: Software architecture, AI, data & engineering", "link": "https://www.itdays.ro/register", "id": "e_5a3700592c", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "ErgoWork 2026", "start": "2026-11-12", "end": "2026-11-13", "category": "Tech & Crypto", "country": "Romania", "notes": "City: Timișoara; Topic: Human factors, workplace technology & ergonomics", "link": "https://easychair.org/cfp/ErgoWork2026", "id": "e_8c1433edcf", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "SecITC 2026", "start": "2026-11-12", "end": "2026-11-13", "category": "Tech & Crypto", "country": "Romania", "notes": "City: București – Palatul Cercului Militar Național; Topic: Cybersecurity & post-quantum cryptography", "link": "https://secitc.eu/", "id": "e_96e97f0cd0", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "DefCamp 2026 – Workshops & Conference", "start": "2026-11-16", "end": "2026-11-20", "category": "Tech & Crypto", "country": "Romania", "notes": "City: București – Palatul Parlamentului; Topic: Cybersecurity, hacking & digital defense", "link": "https://def.camp/", "id": "e_9d4247353e", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Romanian Energy Week 2026", "start": "2026-11-16", "end": "2026-11-20", "category": "Tech & Crypto", "country": "Romania", "notes": "City: București – Palatul Parlamentului; Topic: EnergyTech, clean tech & digital infrastructure", "link": "https://energyexpo.ro/rew/", "id": "e_37ac6b0880", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "ICAAS 2026 – International Conference on Advanced Autonomous Systems", "start": "2026-11-18", "end": "2026-11-20", "category": "Tech & Crypto", "country": "Romania", "notes": "City: București – POLITEHNICA București; Topic: Autonomous systems, robotics & AI", "link": "https://tmr.upb.ro/conferinta/", "id": "e_547a0e4d75", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "RoEduNet Conference 2026", "start": "2026-11-19", "end": "2026-11-21", "category": "Tech & Crypto", "country": "Romania", "notes": "City: Iași; Topic: Research networks, cloud, cybersecurity & education tech", "link": "https://events.roedu.net/event/9/", "id": "e_83d2b97436", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Consumer Tech Show 2026", "start": "2026-11-20", "end": "2026-11-22", "category": "Tech & Crypto", "country": "Romania", "notes": "City: București; Topic: Consumer electronics, smart home & digital lifestyle", "link": "https://consumertechshow.ro/en/home/", "id": "e_6bb63f4110", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "EURO POLITEHNICUS 2026", "start": "2026-11-20", "end": "2026-11-22", "category": "Tech & Crypto", "country": "Romania", "notes": "City: București – POLITEHNICA București; Topic: Innovation, inventions & emerging technologies", "link": "https://politehnicus.upb.ro/", "id": "e_9221e02d72", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Bucharest Gaming Week 2026", "start": "2026-11-21", "end": "2026-11-22", "category": "Tech & Crypto", "country": "Romania", "notes": "City: București – ROMEXPO; Topic: Gaming, esports, XR & creative technology", "link": "https://www.iabilet.ro/bilete-bucharest-gaming-week-2026-117120/", "id": "e_930c6ac2ae", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Banking 4.0 2026", "start": "2026-11-24", "end": "2026-11-25", "category": "Tech & Crypto", "country": "Romania", "notes": "City: București – InterContinental Athénée Palace; Topic: FinTech, autonomous finance & AI", "link": "https://banking40.ro/", "id": "e_926b00d4a6", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "The Principal Dev – Masterclass for Tech Leads", "start": "2026-12-03", "end": "2026-12-04", "category": "Tech & Crypto", "country": "Romania", "notes": "City: Online / organizator cu piață în România; Topic: Software leadership & architecture", "link": "https://dev.events/EU/RO/tech", "id": "e_e01d949aca", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Smart Cities International Conference 2026", "start": "2026-12-09", "end": "2026-12-11", "category": "Tech & Crypto", "country": "Romania", "notes": "City: București; Topic: Smart cities, IoT, govtech & urban data", "link": "https://smart-edu-hub.eu/events", "id": "e_8eb1bc5274", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Clean Architecture Masterclass", "start": "2026-12-10", "end": "2026-12-11", "category": "Tech & Crypto", "country": "Romania", "notes": "City: Online / organizator cu piață în România; Topic: Software architecture", "link": "https://dev.events/EU/RO/tech", "id": "e_d5c2d5a1b7", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "ATEE 2027 – Advanced Topics in Electrical Engineering", "start": "2027-03-25", "end": "2027-03-27", "category": "Tech & Crypto", "country": "Romania", "notes": "City: București – POLITEHNICA București; Topic: Electrical engineering, smart systems & AI", "link": "https://atee.upb.ro/atee2027/index.php?action=about", "id": "e_1d0622eeec", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "DIGITALIUM", "start": "2027-04-14", "end": "2027-04-15", "category": "Tech & Crypto", "country": "Romania", "notes": "City: Bucuresti; Topic: Intern", "link": "https://digitalium.com/#stages", "id": "e_a483d9caa2", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "DevTalks Romania 2027", "start": "2027-06-09", "end": "2027-06-10", "category": "Tech & Crypto", "country": "Romania", "notes": "City: București – locație de reconfirmat; Topic: Software, AI, cloud & emerging technology", "link": "https://www.devtalks.ro/", "id": "e_576c89b1f7", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "ROCAM 2027 – Romanian Conference on Advanced Materials", "start": "2027-06-28", "end": "2027-07-01", "category": "Tech & Crypto", "country": "Romania", "notes": "City: București; Topic: Advanced materials & nanotechnology", "link": "https://rocam.unibuc.ro/", "id": "e_21f87ec91d", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "International Conference on Biomedical Biotechnology and Genetic Research", "start": "2026-08-10", "end": "2026-08-11", "category": "Med Tech", "country": "Romania", "notes": "City: Constanța", "link": "https://internationalconferencealerts.com/romania/biomedical-engineering", "id": "e_f58cf92029", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "International Conference on Digital Health and Telemedicine", "start": "2026-08-20", "end": "2026-08-20", "category": "Med Tech", "country": "Romania", "notes": "City: București", "link": "https://www.allconferencealert.com/romania/health", "id": "e_3cbfa73fc0", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "International Conference on Artificial Intelligence, Deep Learning and Machine Learning", "start": "2026-08-23", "end": "2026-08-23", "category": "Med Tech", "country": "Romania", "notes": "City: București", "link": "https://www.allconferencealert.com/romania/artificial-intelligence", "id": "e_b480df367f", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "International Conference on Biomechanics and Rehabilitation Engineering", "start": "2026-08-31", "end": "2026-09-01", "category": "Med Tech", "country": "Romania", "notes": "City: București", "link": "https://internationalconferencealerts.com/romania/biomedical-engineering", "id": "e_c34ca00c44", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Global Summit on Artificial Intelligence and Emerging Technologies", "start": "2026-09-02", "end": "2026-09-02", "category": "Med Tech", "country": "Romania", "notes": "City: România – oraș neconfirmat", "link": "https://www.allconferencealert.com/romania/artificial-intelligence", "id": "e_ca789f2f52", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Tomorrow: AI, Robotics, Education, Clean Energy and Digital Health", "start": "2026-09-21", "end": "2026-09-22", "category": "Med Tech", "country": "Romania", "notes": "City: București", "link": "https://www.allconferencealert.com/romania/health", "id": "e_f4e9d1b89d", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "International Workshop on Ultrasound in Medical Education", "start": "2026-09-23", "end": "2026-09-24", "category": "Med Tech", "country": "Romania", "notes": "City: București", "link": "https://internationalconferencealerts.com/romania/ultrasound", "id": "e_981a77d9a9", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Congresul Internațional de Longevitate", "start": "2026-09-24", "end": "2026-09-24", "category": "Med Tech", "country": "Romania", "notes": "City: Bucuresti", "link": "https://allevents.in/bucharest/congresul-interna%C8%9Bional-de-longevitate-edi%C8%9Bia-a-ii-a/200030477070436", "id": "e_b6a569c34b", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Congresul Național SRIM 2026", "start": "2026-09-24", "end": "2026-09-27", "category": "Med Tech", "country": "Romania", "notes": "City: Sinaia – Casino Sinaia", "link": "https://www.srimr.ro/evenimente/2026-congres-srim", "id": "e_7a636bf983", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "European Diploma in Radiology – EDiR 2026 România", "start": "2026-09-26", "end": "2026-09-26", "category": "Med Tech", "country": "Romania", "notes": "City: Sinaia", "link": "https://www.srimr.ro/noutati/2026-diploma-europeana-in-radiologie", "id": "e_3e83fb0bbd", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "International Conference on Biomedical Technologies and Bioinformatics", "start": "2026-09-30", "end": "2026-10-01", "category": "Med Tech", "country": "Romania", "notes": "City: București", "link": "https://internationalconferencealerts.com/romania/biomedical-engineering", "id": "e_2af056fcc1", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "International Conference on Healthcare Innovation and Technology Strategy", "start": "2026-10-03", "end": "2026-10-04", "category": "Med Tech", "country": "Romania", "notes": "City: București", "link": "https://internationalconferencealerts.com/romania/medicine", "id": "e_173df8b209", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "International Conference on Healthcare Innovation, Global Business Strategy, Energy Systems Modeling, Migration Studies, and Marketing", "start": "2026-10-03", "end": "2026-10-04", "category": "Med Tech", "country": "Romania", "notes": "City: Bucuresti", "link": "https://Internationalconferencealerts.com/event-ichgbemmm-bucharest-ro-202610-101128136", "id": "e_0033f1309e", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "International Conference on Radiology and Diagnostic Accuracy", "start": "2026-10-07", "end": "2026-10-08", "category": "Med Tech", "country": "Romania", "notes": "City: București", "link": "https://internationalconferencealerts.com/romania/radiology", "id": "e_e9af3570ec", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "EFC Congress 2026 – Colposcopy: Raising the Bar Across Europe", "start": "2026-10-14", "end": "2026-10-17", "category": "Med Tech", "country": "Romania", "notes": "City: București", "link": "https://congress2026.efcolposcopy.eu/", "id": "e_05cf4abc56", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "DENTA & ROMMEDICA 2026", "start": "2026-10-16", "end": "2026-10-18", "category": "Med Tech", "country": "Romania", "notes": "City: București – ROMEXPO", "link": "https://rommedica.ro/info-vizitatori/", "id": "e_cf303f924b", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "BEHEALTH 2026 – International Forum for Research and Innovation in Healthcare", "start": "2026-10-19", "end": "2026-10-22", "category": "Med Tech", "country": "Romania", "notes": "City: București / Online", "link": "https://www.b2match.com/e/behealth-2026", "id": "e_c1df50c0f5", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "ESAG 10th Anniversary World Congress & Master Class", "start": "2026-10-20", "end": "2026-10-22", "category": "Med Tech", "country": "Romania", "notes": "City: București – JW Marriott Bucharest Grand Hotel", "link": "https://esag.org/", "id": "e_83094d5aa3", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Conferinta Nationala de Medicina Familiei", "start": "2026-10-21", "end": "2026-10-24", "category": "Med Tech", "country": "Romania", "notes": "City: Bucuresti", "link": "https://allevents.in/bucharest/conferinta-nationala-de-medicina-familiei-editia-2026/200030476539941", "id": "e_9b27f3f9c8", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "AI4MED 2026 – Inteligența Artificială și Medicina Augmentată: Viitorul Medicinei de Precizie", "start": "2026-10-22", "end": "2026-10-23", "category": "Med Tech", "country": "Romania", "notes": "City: Iași", "link": "https://www.medical-congresses.ro/evenimente-proevents/ai4med-2026/", "id": "e_b375962869", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "ROHO 2026 Romanian Hospital and Healthcare Convention", "start": "2026-10-22", "end": "2026-10-23", "category": "Med Tech", "country": "Romania", "notes": "City: Bucuresti", "link": "https://allevents.in/bucharest/roho-2026-romanian-hospital-and-healthcare-convention/200030439993220", "id": "e_bea3333c32", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Al XIV-lea Congres al Societății Române de Ultrasonografie în Obstetrică și Ginecologie", "start": "2026-10-22", "end": "2026-10-24", "category": "Med Tech", "country": "Romania", "notes": "City: Timișoara – Timișoara Convention Center", "link": "https://www.medical-congresses.ro/evenimente-proevents/al-xiv-lea-congres-al-societatii-romane-de-ultrasonografie-in-obstetrica-si-ginecologie/", "id": "e_8aae168714", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "East Meets West 2026 – ISEVS Congress", "start": "2026-10-23", "end": "2026-10-24", "category": "Med Tech", "country": "Romania", "notes": "City: București – Crowne Plaza Conference Center", "link": "https://www.srcet.ro/", "id": "e_503e667336", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Advanced Course on PET/CT – ART: Applying Radionuclides in Therapy", "start": "2026-10-30", "end": "2026-10-31", "category": "Med Tech", "country": "Romania", "notes": "City: București", "link": "https://www.medical-congresses.ro/evenimente-proevents/", "id": "e_80f542851d", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "HealthTech Forum 2026", "start": "2026-11-05", "end": "2026-11-06", "category": "Med Tech", "country": "Romania", "notes": "City: București – Camera de Comerț și Industrie a Municipiului București", "link": "https://healthtechforum.eu/en/", "id": "e_74c52d3ab6", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "International Conference on AI and Big Data in Biomedical Engineering", "start": "2026-11-06", "end": "2026-11-07", "category": "Med Tech", "country": "Romania", "notes": "City: București", "link": "https://efstm.com/event/index.php?id=101223039", "id": "e_11f7941b7e", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "International Conference on Medicine and Regenerative Medicine", "start": "2026-11-06", "end": "2026-11-07", "category": "Med Tech", "country": "Romania", "notes": "City: București", "link": "https://internationalconferencealerts.com/romania/medicine", "id": "e_ff0aeb9b41", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "International Conference on Biomedical Innovation in Genomics and Biotechnology", "start": "2026-11-17", "end": "2026-11-18", "category": "Med Tech", "country": "Romania", "notes": "City: București", "link": "https://internationalconferencealerts.com/conferences/bucharest/bioinformatics", "id": "e_8219a3ef29", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Conferința Națională de Imagistica Sânului", "start": "2026-11-19", "end": "2026-11-21", "category": "Med Tech", "country": "Romania", "notes": "City: Sibiu – Hotel Ramada", "link": "https://www.medical-congresses.ro/tip-eveniment/format-fizic/", "id": "e_dc92042052", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "7th SREG International Congress – Aesthetic, Functional & Regenerative Gynecology", "start": "2026-11-20", "end": "2026-11-21", "category": "Med Tech", "country": "Romania", "notes": "City: București – Face Convention Centre", "link": "https://www.sreg.ro/sreg-conference/", "id": "e_6e0a4e110b", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Transilvania Interventional Course", "start": "2026-11-20", "end": "2026-11-22", "category": "Med Tech", "country": "Romania", "notes": "City: Târgu Mureș", "link": "https://www.medical-congresses.ro/evenimente-proevents/transilvania-interventional-course/", "id": "e_bf28c6d8c2", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "International Conference on Molecular Diagnostics and Biomarker Discovery", "start": "2026-11-21", "end": "2026-11-22", "category": "Med Tech", "country": "Romania", "notes": "City: Brașov", "link": "https://internationalconferencealerts.com/romania/biology", "id": "e_a5b7866076", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "International Conference on Radiology and PET/CT Innovations", "start": "2026-11-30", "end": "2026-12-01", "category": "Med Tech", "country": "Romania", "notes": "City: București", "link": "https://internationalconferencealerts.com/romania/radiology", "id": "e_009cadca77", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "International Conference on Genomic Technologies and Functional Genomics", "start": "2026-12-08", "end": "2026-12-09", "category": "Med Tech", "country": "Romania", "notes": "City: București", "link": "https://internationalconferencealerts.com/romania/biology", "id": "e_a93514bb7b", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "International Conference on Radiology and Oncologic Imaging", "start": "2026-12-12", "end": "2026-12-13", "category": "Med Tech", "country": "Romania", "notes": "City: București", "link": "https://internationalconferencealerts.com/romania/radiology", "id": "e_ec61ce8eb2", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "International Conference on DNA Computing and Nanoengineering in Bioinformatics", "start": "2026-12-15", "end": "2026-12-16", "category": "Med Tech", "country": "Romania", "notes": "City: București", "link": "https://internationalconferencealerts.com/conferences/bucharest/bioinformatics", "id": "e_5f5c08c114", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "International Conference on Cancer Genomics and Precision Medicine Approaches", "start": "2026-12-17", "end": "2026-12-18", "category": "Med Tech", "country": "Romania", "notes": "City: București", "link": "https://internationalconferencealerts.com/romania/biology", "id": "e_cd3300dde2", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "International Conference on Bioinformatics, Genomic Algorithms and Data Integration", "start": "2026-12-23", "end": "2026-12-24", "category": "Med Tech", "country": "Romania", "notes": "City: București", "link": "https://internationalconferencealerts.com/romania/biology", "id": "e_ea639f1927", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "International Conference on AI Applications in Biomedical Informatics", "start": "2026-12-25", "end": "2026-12-26", "category": "Med Tech", "country": "Romania", "notes": "City: București", "link": "https://internationalconferencealerts.com/conferences/bucharest/bioinformatics", "id": "e_79cf173a32", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "International Conference on Biomedical Informatics and Biotechnology Challenges", "start": "2026-12-25", "end": "2026-12-26", "category": "Med Tech", "country": "Romania", "notes": "City: București", "link": "https://internationalconferencealerts.com/conferences/bucharest/bioinformatics", "id": "e_a462c37349", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "RadTech 2027 – Imagistica medicală în mâinile tehnicianului", "start": "2027-01-30", "end": "2027-01-31", "category": "Med Tech", "country": "Romania", "notes": "City: Cluj-Napoca", "link": "https://www.medical-congresses.ro/evenimente-proevents/radtech-2027/", "id": "e_a570b291e7", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "International Conference on Digital Medicine and AI in Diagnostics (ICDMAID)", "start": "2027-04-23", "end": "2027-04-23", "category": "Med Tech", "country": "Romania", "notes": "City: București", "link": "https://www.conferenceineurope.org/romania/ai/april", "id": "e_0724bff85c", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "International Conference on Assistive Technology Systems (ICATS)", "start": "2027-05-06", "end": "2027-05-07", "category": "Med Tech", "country": "Romania", "notes": "City: București", "link": "https://waset.org/assistive-technology-systems-conference-in-may-2027-in-bucharest", "id": "e_dee66bbf31", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "International Conference on Biomedical and Health Sciences (ICBAHS)", "start": "2027-05-06", "end": "2027-05-07", "category": "Med Tech", "country": "Romania", "notes": "City: București", "link": "https://waset.org/biomedical-and-health-sciences-conference", "id": "e_e8ef5e01e9", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "International Conference on Electronics, Information and Communication – biomedical track (ICEIC)", "start": "2027-05-06", "end": "2027-05-07", "category": "Med Tech", "country": "Romania", "notes": "City: București", "link": "https://waset.org/electronics-information-and-communication-conference-in-may-2027-in-bucharest", "id": "e_5fb3ed52d2", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "International Conference on Bioinformatics and Biomedicine (ICBB)", "start": "2027-05-08", "end": "2027-05-09", "category": "Med Tech", "country": "Romania", "notes": "City: București", "link": "https://waset.org/bioinformatics-and-biomedicine-conferences-in-may-2027-in-bucharest", "id": "e_27042b9cff", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "International Conference on Biomathematics, Biostatistics, Bioinformatics and Bioengineering", "start": "2027-05-08", "end": "2027-05-09", "category": "Med Tech", "country": "Romania", "notes": "City: București", "link": "https://waset.org/bioinformatics-and-biomedicine-conferences-in-may-2027-in-bucharest", "id": "e_0a6679b61c", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "International Conference on Biomedical Engineering (ICBE)", "start": "2027-05-08", "end": "2027-05-09", "category": "Med Tech", "country": "Romania", "notes": "City: București", "link": "https://waset.org/biomedical-electronics-conferences-in-may-2027-in-bucharest", "id": "e_190aca098d", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "International Conference on Biomedical Engineering and Applied Biophysics (ICBEAB)", "start": "2027-05-08", "end": "2027-05-09", "category": "Med Tech", "country": "Romania", "notes": "City: București", "link": "https://waset.org/biomedical-electronics-conferences-in-may-2027-in-bucharest", "id": "e_7ff9b2eb3f", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "International Conference on Biophysics and Medical Physics (ICBMP)", "start": "2027-05-08", "end": "2027-05-09", "category": "Med Tech", "country": "Romania", "notes": "City: București", "link": "https://waset.org/biomedical-electronics-conferences-in-may-2027-in-bucharest", "id": "e_8cd868f717", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "International Conference on Biosensors and Bioelectronics (ICBB)", "start": "2027-05-08", "end": "2027-05-09", "category": "Med Tech", "country": "Romania", "notes": "City: București", "link": "https://waset.org/biomedical-electronics-conferences-in-may-2027-in-bucharest", "id": "e_549c633310", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "International Conference on Biotechnology and Bioengineering", "start": "2027-05-08", "end": "2027-05-09", "category": "Med Tech", "country": "Romania", "notes": "City: București", "link": "https://waset.org/bioinformatics-and-biomedicine-conferences-in-may-2027-in-bucharest", "id": "e_4ff406d5d3", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "International Conference on Telecare, Telehealth and Telemedicine (ICTTT)", "start": "2027-05-08", "end": "2027-05-09", "category": "Med Tech", "country": "Romania", "notes": "City: București", "link": "https://conferenceindex.org/event/international-conference-on-telecare-telehealth-and-telemedicine-icttt-2027-may-bucharest-ro", "id": "e_6a5fdc690a", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "National Conferences on Estate, Financial and Tax Planning, and Related Disciplines (NCEFTPRD)", "start": "2026-09-14", "end": "2026-09-14", "category": "Real Estate", "country": "Romania", "notes": "City: Timisoara", "link": "https://www.allconferencealert.com/event/2917395", "id": "e_22ebfd17c3", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "International Conference on Housing Economics and Real Estate Markets", "start": "2026-09-17", "end": "2026-09-18", "category": "Real Estate", "country": "Romania", "notes": "City: Bucuresti", "link": "https://Internationalconferencealerts.com/event-icherem-bucharest-ro-202609-101115103", "id": "e_5300921aa3", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "International Conference on Real Estate Investment Trusts and Asset Management", "start": "2026-10-28", "end": "2026-10-29", "category": "Real Estate", "country": "Romania", "notes": "City: Bucuresti", "link": "https://Internationalconferencealerts.com/event-icreitam-bucharest-ro-202610-101138992", "id": "e_0b868c1841", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "International Conference on Youth Entrepreneurship and Career Development", "start": "2026-09-02", "end": "2026-09-03", "category": "Business Development", "country": "Romania", "notes": "City: Bucuresti", "link": "https://igaeglobal.com/payment/list_index.php?id=101119434", "id": "e_ba6dc29b65", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Business Days Cluj 2026", "start": "2026-10-06", "end": "2026-10-06", "category": "Business Development", "country": "Romania", "notes": "City: Cluj", "link": "https://content.businessdays.ro/Cluj-2026", "id": "e_46423cd29f", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Conferința regională RBL Banat 2026", "start": "2026-10-08", "end": "2026-10-08", "category": "Business Development", "country": "Romania", "notes": "City: TBD", "link": "https://www.rbls.ro/eveniment/conferinta-regionala-rbl-banat-2026/", "id": "e_860678f358", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "Conferința regională RBL Sibiu 2026", "start": "2026-11-05", "end": "2026-11-05", "category": "Business Development", "country": "Romania", "notes": "City: Sibiu", "link": "https://www.rbls.ro/eveniment/14174/", "id": "e_62ed267aff", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "International Conference on Business Management and Social Innovation", "start": "2026-11-07", "end": "2026-11-07", "category": "Business Development", "country": "Romania", "notes": "City: Iasi", "link": "https://Internationalconferencealerts.com/event-icbmsi-lasi-ro-202611-101317881", "id": "e_4acc7ebd42", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "International Conference on Cross-Border Banking and Financial Flows", "start": "2026-08-19", "end": "2026-08-20", "category": "Banking", "country": "Romania", "notes": "City: Bucuresti", "link": "https://Internationalconferencealerts.com/event-iccbff-bucharest-ro-202608-100737893", "id": "e_665cdc18ac", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "International Conference on Housing Finance and Mortgage Systems", "start": "2026-08-31", "end": "2026-09-01", "category": "Banking", "country": "Romania", "notes": "City: Bucuresti", "link": "https://Internationalconferencealerts.com/event-ichfms-bucharest-ro-202608-100731561", "id": "e_1c9b2f642e", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "International Conference on Taxation, Trade, and International Public Finance", "start": "2026-09-04", "end": "2026-09-05", "category": "Banking", "country": "Romania", "notes": "City: Bucuresti", "link": "https://Internationalconferencealerts.com/event-icttipf-bucharest-ro-202609-101128126", "id": "e_8390c70821", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "International Conference on Cross-Border Banking and Global Finance", "start": "2026-09-12", "end": "2026-09-13", "category": "Banking", "country": "Romania", "notes": "City: Bucuresti", "link": "https://Internationalconferencealerts.com/event-iccbgf-bucharest-ro-202609-101141145", "id": "e_d512db3ff2", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "International Conference on Microfinance and Inclusive Banking", "start": "2026-09-26", "end": "2026-09-27", "category": "Banking", "country": "Romania", "notes": "City: Brasov", "link": "https://Internationalconferencealerts.com/event-icmfib-brasov-ro-202609-101112934", "id": "e_c4c103e845", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"name": "International Conference on Strategic Asset Management and Diversification", "start": "2026-10-19", "end": "2026-10-20", "category": "Banking", "country": "Romania", "notes": "City: Bucuresti", "link": "https://Internationalconferencealerts.com/event-icsamd-bucharest-ro-202610-101112942", "id": "e_036a3a4539", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "confirmed", "knownMonth": null, "knownYear": null, "note": ""}, {"id": "e_73099476ec", "name": "The Bucharest Hackathon 2026", "start": null, "end": null, "category": "Tech & Crypto", "country": "Romania", "notes": "City: București; Date not yet announced (2026)", "link": "https://thebucharesthackathon.com/", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "no_date", "knownMonth": null, "knownYear": 2026, "note": ""}, {"id": "e_63a6dac41e", "name": "Innovation Labs 2027 – Hackathon, pre-accelerare și Demo Day", "start": null, "end": null, "category": "Tech & Crypto", "country": "Romania", "notes": "City: București / Hibrid; Announced window: March 2027 – May 2027 (no fixed day)", "link": "https://www.innovationlabs.ro/", "manualTags": {"signedUp": false, "speakingAt": false, "hosting": false, "notAttending": false}, "dateStatus": "month_known", "knownMonth": 3, "knownYear": 2027, "note": ""}]};
+
+function loadState() {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  let state;
+  if (!raw) { state = JSON.parse(JSON.stringify(DEFAULT_STATE)); }
+  else { try { state = JSON.parse(raw); } catch (e) { state = JSON.parse(JSON.stringify(DEFAULT_STATE)); } }
+  if (!state.adminPassword) state.adminPassword = randomPassword(12);
+  if (!Array.isArray(state.categories) || state.categories.length === 0) state.categories = DEFAULT_STATE.categories.slice();
+  if (!Array.isArray(state.countries) || state.countries.length === 0) state.countries = DEFAULT_STATE.countries.slice();
+  if (!Array.isArray(state.events)) state.events = DEFAULT_STATE.events.slice();
+  saveState(state);
+  return state;
+}
+function saveState(state) { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+
+let state = loadState();
+let session = { isAdmin: false };
+let activeFilters = { categories: [], countries: [] };
+let currentTab = "scheduled";
+let highlightedEventId = null;
+let preSearchViewState = null; // snapshot to restore on "X" click
+
+const today = new Date();
+today.setHours(0,0,0,0);
+let viewYear = today.getFullYear();
+let viewMonth = today.getMonth();
+
+const TAB_LABELS = {
+  scheduled: "Scheduled.", international: "International.",
+  signedup: "Signed Up.", speakingat: "Speaking At.", hosting: "Hosting.",
+  unknown: "Unknown Date/Location."
+};
+const MONTH_NAMES = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+const DOW_NAMES = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+
+function applyTheme(theme) { document.documentElement.setAttribute('data-theme', theme); localStorage.setItem(THEME_KEY, theme); }
+function initTheme() { const saved = localStorage.getItem(THEME_KEY) || 'dark'; applyTheme(saved); }
+document.getElementById('themeToggle').addEventListener('click', () => {
+  const current = document.documentElement.getAttribute('data-theme') || 'dark';
+  applyTheme(current === 'dark' ? 'light' : 'dark');
+});
+
+function isRomania(ev) { return (ev.country || "").trim().toLowerCase() === "romania"; }
+function hasFixedDate(ev) { return !!(ev.start && ev.end); }
+
+function eventMatchesTab(ev, tab) {
+  if (tab !== "unknown" && !hasFixedDate(ev)) return false;
+  switch (tab) {
+    case "scheduled": return true;
+    case "international": return !isRomania(ev);
+    case "signedup": return !!(ev.manualTags && ev.manualTags.signedUp);
+    case "speakingat": return !!(ev.manualTags && ev.manualTags.speakingAt);
+    case "hosting": return !!(ev.manualTags && ev.manualTags.hosting);
+    default: return true;
+  }
+}
+
+function renderRibbon() {
+  document.querySelectorAll('.ribbon-tab').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.tab === currentTab);
+    btn.onclick = () => {
+      currentTab = btn.dataset.tab;
+      highlightedEventId = null;
+      document.getElementById('pageTitle').textContent = TAB_LABELS[currentTab];
+      const isUnknown = currentTab === 'unknown';
+      document.getElementById('calendarSection').style.display = isUnknown ? 'none' : 'flex';
+      document.getElementById('controlsPanel').style.display = isUnknown ? 'none' : 'flex';
+      document.getElementById('unknownSection').classList.toggle('active', isUnknown);
+      if (!isUnknown) {
+        document.getElementById('calendarSectionLabel').textContent = TAB_LABELS[currentTab].replace('.', '') + ' — Events Calendar';
+        renderFilterPanels();
+        renderCalendar();
+      } else {
+        renderUnknownTable();
+      }
+      renderRibbon();
+    };
+  });
+}
+
+function unknownEventCategory(ev) {
+  if (hasFixedDate(ev) && !ev.country) return 1;
+  if (!hasFixedDate(ev) && ev.knownMonth) return 2;
+  return 3;
+}
+function getUnknownEvents() {
+  const allEvents = Array.isArray(state.events) ? state.events : [];
+  const relevant = allEvents.filter(ev => !hasFixedDate(ev) || !ev.country);
+  relevant.sort((a, b) => {
+    const catA = unknownEventCategory(a), catB = unknownEventCategory(b);
+    if (catA !== catB) return catA - catB;
+    if (catA === 1) return (a.start || "").localeCompare(b.start || "");
+    if (catA === 2) {
+      const yA = a.knownYear || 9999, yB = b.knownYear || 9999;
+      if (yA !== yB) return yA - yB;
+      const mA = a.knownMonth || 13, mB = b.knownMonth || 13;
+      return mA - mB;
+    }
+    return a.name.localeCompare(b.name);
+  });
+  return relevant;
+}
+function unknownStatusLabel(ev) {
+  if (hasFixedDate(ev) && !ev.country) return 'Known Date, No Location';
+  if (!hasFixedDate(ev) && ev.knownMonth) return 'Month Known Only';
+  return 'No Date Announced';
+}
+function unknownDateInfo(ev) {
+  if (hasFixedDate(ev) && !ev.country) return fmtDateHuman(ev.start) + ' → ' + fmtDateHuman(ev.end);
+  if (!hasFixedDate(ev) && ev.knownMonth) return MONTH_NAMES[ev.knownMonth - 1] + (ev.knownYear ? ' ' + ev.knownYear : '');
+  if (ev.knownYear) return 'Year ' + ev.knownYear + ' (date TBD)';
+  return 'Not announced';
+}
+function renderUnknownTable() {
+  const body = document.getElementById('unknownTableBody');
+  body.innerHTML = '';
+  const list = getUnknownEvents();
+  if (list.length === 0) { body.innerHTML = '<tr><td colspan="6" class="unknown-empty-msg">No events with missing date or location information.</td></tr>'; return; }
+  list.forEach(ev => {
+    const tr = document.createElement('tr');
+    const linkHtml = isValidUrl(ev.link) ? '<a href="' + escapeHtml(ev.link) + '" target="_blank" rel="noopener noreferrer">Visit site ↗</a>' : '—';
+    tr.innerHTML =
+      '<td>' + escapeHtml(ev.name) + '</td>' +
+      '<td class="status-badge-cell"><span>' + unknownStatusLabel(ev) + '</span></td>' +
+      '<td>' + escapeHtml(unknownDateInfo(ev)) + '</td>' +
+      '<td>' + escapeHtml(ev.country || '—') + '</td>' +
+      '<td>' + escapeHtml(ev.category || '—') + '</td>' +
+      '<td>' + linkHtml + '</td>';
+    if (session.isAdmin) { tr.style.cursor = 'pointer'; tr.addEventListener('click', (e) => { if (e.target.tagName === 'A') return; openEventModal(ev.id); }); }
+    body.appendChild(tr);
+  });
+}
+
+function closeAllFilterPanels() { document.querySelectorAll('.filter-dropdown-panel, .search-dropdown-panel').forEach(p => p.classList.remove('open')); }
+document.getElementById('categoryFilterTrigger').addEventListener('click', (e) => {
+  e.stopPropagation();
+  const panel = document.getElementById('categoryFilterPanel');
+  const wasOpen = panel.classList.contains('open');
+  closeAllFilterPanels();
+  if (!wasOpen) panel.classList.add('open');
+});
+document.getElementById('countryFilterTrigger').addEventListener('click', (e) => {
+  e.stopPropagation();
+  const panel = document.getElementById('countryFilterPanel');
+  const wasOpen = panel.classList.contains('open');
+  closeAllFilterPanels();
+  if (!wasOpen) panel.classList.add('open');
+});
+document.addEventListener('click', () => closeAllFilterPanels());
+document.querySelectorAll('.filter-dropdown-panel, .search-dropdown-panel').forEach(p => p.addEventListener('click', (e) => e.stopPropagation()));
+
+function updateFilterTriggerLabels() {
+  const catLabel = document.getElementById('categoryFilterTriggerLabel');
+  catLabel.textContent = activeFilters.categories.length === 0 ? 'All Categories' : activeFilters.categories.length === 1 ? activeFilters.categories[0] : activeFilters.categories.length + ' Categories';
+  const countryLabel = document.getElementById('countryFilterTriggerLabel');
+  countryLabel.textContent = activeFilters.countries.length === 0 ? 'All Countries' : activeFilters.countries.length === 1 ? activeFilters.countries[0] : activeFilters.countries.length + ' Countries';
+}
+function buildFilterOptionRow(label, count, isSelected, onToggle) {
+  const row = document.createElement('div');
+  row.className = 'filter-option-row' + (isSelected ? ' selected' : '');
+  const labelSpan = document.createElement('span'); labelSpan.className = 'opt-label'; labelSpan.textContent = label;
+  const countSpan = document.createElement('span'); countSpan.className = 'opt-count'; countSpan.textContent = '(' + count + ')';
+  const removeBtn = document.createElement('span'); removeBtn.className = 'filter-option-remove'; removeBtn.textContent = '×';
+  row.appendChild(labelSpan); row.appendChild(countSpan); row.appendChild(removeBtn);
+  row.addEventListener('click', (e) => { e.stopPropagation(); onToggle(); });
+  return row;
+}
+function renderFilterPanels() {
+  const events = Array.isArray(state.events) ? state.events : [];
+  const tabEvents = events.filter(ev => eventMatchesTab(ev, currentTab));
+  const presentCategories = Array.from(new Set(tabEvents.map(e => e.category))).filter(Boolean).sort();
+  const presentCountries = Array.from(new Set(tabEvents.map(e => e.country))).filter(Boolean).sort();
+  activeFilters.categories = activeFilters.categories.filter(c => presentCategories.includes(c));
+  activeFilters.countries = activeFilters.countries.filter(c => presentCountries.includes(c));
+
+  const catList = document.getElementById('categoryFilterList');
+  catList.innerHTML = '';
+  if (presentCategories.length === 0) { catList.innerHTML = '<div class="filter-dropdown-empty">No categories in this tab</div>'; }
+  else { presentCategories.forEach(cat => {
+    const count = tabEvents.filter(e => e.category === cat).length;
+    const isSelected = activeFilters.categories.includes(cat);
+    catList.appendChild(buildFilterOptionRow(cat, count, isSelected, () => {
+      const idx = activeFilters.categories.indexOf(cat);
+      if (idx === -1) activeFilters.categories.push(cat); else activeFilters.categories.splice(idx, 1);
+      renderFilterPanels(); renderCalendar();
+    }));
+  }); }
+
+  const countryList = document.getElementById('countryFilterList');
+  countryList.innerHTML = '';
+  if (presentCountries.length === 0) { countryList.innerHTML = '<div class="filter-dropdown-empty">No countries in this tab</div>'; }
+  else { presentCountries.forEach(country => {
+    const count = tabEvents.filter(e => e.country === country).length;
+    const isSelected = activeFilters.countries.includes(country);
+    countryList.appendChild(buildFilterOptionRow(country, count, isSelected, () => {
+      const idx = activeFilters.countries.indexOf(country);
+      if (idx === -1) activeFilters.countries.push(country); else activeFilters.countries.splice(idx, 1);
+      renderFilterPanels(); renderCalendar();
+    }));
+  }); }
+  updateFilterTriggerLabels();
+  renderActiveFilterTags();
+}
+function renderActiveFilterTags() {
+  const box = document.getElementById('activeFilterTags');
+  box.innerHTML = "";
+  activeFilters.categories.forEach(cat => { box.appendChild(makeActiveTag('Category: ' + cat, () => { activeFilters.categories = activeFilters.categories.filter(c => c !== cat); renderFilterPanels(); renderCalendar(); })); });
+  activeFilters.countries.forEach(country => { box.appendChild(makeActiveTag('Country: ' + country, () => { activeFilters.countries = activeFilters.countries.filter(c => c !== country); renderFilterPanels(); renderCalendar(); })); });
+}
+function makeActiveTag(text, onRemove) {
+  const tag = document.createElement('span'); tag.className = 'active-tag';
+  const label = document.createElement('span'); label.textContent = text;
+  const removeBtn = document.createElement('button'); removeBtn.textContent = '×'; removeBtn.type = 'button'; removeBtn.onclick = onRemove;
+  tag.appendChild(label); tag.appendChild(removeBtn);
+  return tag;
+}
+
+function fmtDateHuman(d) { if (!d) return ""; const parts = d.split('-'); if (parts.length !== 3) return d; const [y, m, day] = parts; return day + '/' + m + '/' + y; }
+function escapeHtml(str) { const div = document.createElement('div'); div.textContent = str == null ? "" : str; return div.innerHTML; }
+function isValidUrl(str) { if (!str) return false; try { const u = new URL(str); return u.protocol === 'http:' || u.protocol === 'https:'; } catch (e) { return false; } }
+
+function levenshtein(a, b, maxDist) {
+  const m = a.length, n = b.length;
+  if (Math.abs(m - n) > maxDist) return maxDist + 1;
+  const dp = [];
+  for (let i = 0; i <= m; i++) { dp.push(new Array(n + 1).fill(0)); dp[i][0] = i; }
+  for (let j = 0; j <= n; j++) dp[0][j] = j;
+  for (let i = 1; i <= m; i++) { for (let j = 1; j <= n; j++) { const cost = a[i-1] === b[j-1] ? 0 : 1; dp[i][j] = Math.min(dp[i-1][j] + 1, dp[i][j-1] + 1, dp[i-1][j-1] + cost); } }
+  return dp[m][n];
+}
+function wordFuzzyScore(qWord, tWord, maxErrors) { const q = qWord.toLowerCase(), t = tWord.toLowerCase(); if (t.indexOf(q) !== -1) return 0; const dist = levenshtein(q, t, maxErrors); return dist <= maxErrors ? dist : null; }
+function nameMatchScore(query, eventName, maxErrors) {
+  const qWords = query.toLowerCase().trim().split(/\s+/).filter(Boolean);
+  const nameWords = eventName.toLowerCase().split(/\s+/).filter(Boolean);
+  if (qWords.length === 0) return null;
+  let total = 0;
+  for (const qw of qWords) {
+    let best = null;
+    for (const nw of nameWords) { const score = wordFuzzyScore(qw, nw, maxErrors); if (score !== null && (best === null || score < best)) best = score; }
+    if (best === null) return null;
+    total += best;
+  }
+  return total;
+}
+function parseFlexibleDate(str) {
+  const s = str.trim();
+  let m = s.match(/^(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{2,4})$/);
+  if (m) { let [_, d, mo, y] = m; if (y.length === 2) y = '20' + y; const dt = new Date(parseInt(y), parseInt(mo) - 1, parseInt(d)); if (!isNaN(dt.getTime())) { dt.setHours(0,0,0,0); return dt; } }
+  m = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+  if (m) { const dt = new Date(parseInt(m[1]), parseInt(m[2]) - 1, parseInt(m[3])); if (!isNaN(dt.getTime())) { dt.setHours(0,0,0,0); return dt; } }
+  return null;
+}
+function dateRankWithinEvent(queryDate, ev) {
+  if (!hasFixedDate(ev)) return null;
+  const s = new Date(ev.start + "T00:00:00"); const e = new Date(ev.end + "T00:00:00");
+  if (queryDate >= s && queryDate <= e) return Math.round((queryDate - s) / 86400000);
+  return null;
+}
+function searchEvents(query, maxErrors) {
+  const q = query.trim();
+  if (!q) return [];
+  const allEvents = (Array.isArray(state.events) ? state.events : []).filter(hasFixedDate);
+  const queryDate = parseFlexibleDate(q);
+  const results = [];
+  if (queryDate) {
+    allEvents.forEach(ev => { const rank = dateRankWithinEvent(queryDate, ev); if (rank !== null) results.push({ ev, sortKey: rank }); });
+    results.sort((a, b) => a.sortKey - b.sortKey);
+  } else {
+    allEvents.forEach(ev => { const score = nameMatchScore(q, ev.name, maxErrors); if (score !== null) results.push({ ev, sortKey: score }); });
+    results.sort((a, b) => a.sortKey - b.sortKey || a.ev.name.localeCompare(b.ev.name));
+  }
+  return results.slice(0, 25).map(r => r.ev);
+}
+function setSearchIconState(isSearching) {
+  const btn = document.getElementById('searchIconBtn');
+  const svg = document.getElementById('searchIconSvg');
+  btn.classList.toggle('is-clear', isSearching);
+  if (isSearching) { svg.innerHTML = '<line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/>'; }
+  else { svg.innerHTML = '<circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>'; }
+}
+function renderSearchResults(query) {
+  const panel = document.getElementById('searchDropdownPanel');
+  const list = document.getElementById('searchDropdownList');
+  list.innerHTML = '';
+  const hasQuery = !!query.trim();
+  setSearchIconState(hasQuery);
+  if (!hasQuery) { panel.classList.remove('open'); return; }
+  const results = searchEvents(query, 3);
+  if (results.length === 0) { list.innerHTML = '<div class="search-dropdown-empty">No matching events</div>'; }
+  else {
+    results.forEach(ev => {
+      const row = document.createElement('div'); row.className = 'search-option-row';
+      const nameSpan = document.createElement('span'); nameSpan.className = 'search-opt-name'; nameSpan.textContent = ev.name;
+      const metaSpan = document.createElement('span'); metaSpan.className = 'search-opt-meta'; metaSpan.textContent = (ev.country || '—') + ': ' + fmtDateHuman(ev.start) + ' - ' + fmtDateHuman(ev.end);
+      row.appendChild(nameSpan); row.appendChild(metaSpan);
+      row.addEventListener('click', (e) => {
+        e.stopPropagation();
+        jumpToAndHighlightEvent(ev);
+        panel.classList.remove('open');
+        document.getElementById('eventSearchInput').value = ev.name;
+      });
+      list.appendChild(row);
+    });
+  }
+  panel.classList.add('open');
+}
+function jumpToAndHighlightEvent(ev) {
+  if (!preSearchViewState) {
+    preSearchViewState = { viewYear, viewMonth, currentTab, activeFilters: JSON.parse(JSON.stringify(activeFilters)) };
+  }
+  const s = new Date(ev.start + "T00:00:00");
+  viewYear = s.getFullYear(); viewMonth = s.getMonth();
+  currentTab = 'scheduled';
+  highlightedEventId = ev.id;
+  activeFilters.categories = []; activeFilters.countries = [];
+  document.getElementById('calendarSection').style.display = 'flex';
+  document.getElementById('controlsPanel').style.display = 'flex';
+  document.getElementById('unknownSection').classList.remove('active');
+  document.getElementById('pageTitle').textContent = TAB_LABELS[currentTab];
+  document.getElementById('calendarSectionLabel').textContent = TAB_LABELS[currentTab].replace('.', '') + ' — Events Calendar';
+  renderRibbon(); renderFilterPanels(); renderCalendar();
+}
+function clearSearchAndRestore() {
+  document.getElementById('eventSearchInput').value = '';
+  document.getElementById('searchDropdownPanel').classList.remove('open');
+  setSearchIconState(false);
+  highlightedEventId = null;
+  if (preSearchViewState) {
+    viewYear = preSearchViewState.viewYear;
+    viewMonth = preSearchViewState.viewMonth;
+    currentTab = preSearchViewState.currentTab;
+    activeFilters = preSearchViewState.activeFilters;
+    preSearchViewState = null;
+    document.getElementById('pageTitle').textContent = TAB_LABELS[currentTab];
+    const isUnknown = currentTab === 'unknown';
+    document.getElementById('calendarSection').style.display = isUnknown ? 'none' : 'flex';
+    document.getElementById('controlsPanel').style.display = isUnknown ? 'none' : 'flex';
+    document.getElementById('unknownSection').classList.toggle('active', isUnknown);
+    renderRibbon();
+    if (!isUnknown) {
+      document.getElementById('calendarSectionLabel').textContent = TAB_LABELS[currentTab].replace('.', '') + ' — Events Calendar';
+      renderFilterPanels();
+      renderCalendar();
+    } else { renderUnknownTable(); }
+  } else {
+    renderCalendar();
+  }
+}
+document.getElementById('eventSearchInput').addEventListener('input', (e) => renderSearchResults(e.target.value));
+document.getElementById('eventSearchInput').addEventListener('focus', (e) => { if (e.target.value.trim()) renderSearchResults(e.target.value); });
+document.getElementById('searchIconBtn').addEventListener('click', () => {
+  if (document.getElementById('searchIconBtn').classList.contains('is-clear')) clearSearchAndRestore();
+});
+
+function renderMonthYearSelectors() {
+  const monthSelect = document.getElementById('monthFilterSelect');
+  monthSelect.innerHTML = '';
+  MONTH_NAMES.forEach((m, idx) => { const o = document.createElement('option'); o.value = idx; o.textContent = m; if (idx === viewMonth) o.selected = true; monthSelect.appendChild(o); });
+  const events = Array.isArray(state.events) ? state.events : [];
+  const yearsInData = new Set();
+  events.forEach(ev => { if (ev.start) yearsInData.add(parseInt(ev.start.slice(0,4), 10)); if (ev.end) yearsInData.add(parseInt(ev.end.slice(0,4), 10)); });
+  yearsInData.add(viewYear);
+  const years = Array.from(yearsInData).sort((a,b) => a - b);
+  const yearSelect = document.getElementById('yearFilterSelect');
+  yearSelect.innerHTML = '';
+  years.forEach(y => { const o = document.createElement('option'); o.value = y; o.textContent = y; if (y === viewYear) o.selected = true; yearSelect.appendChild(o); });
+  document.getElementById('monthLabelBig').textContent = MONTH_NAMES[viewMonth] + ' ' + viewYear;
+  const tag = document.getElementById('currentMonthTag');
+  tag.style.display = (viewYear === today.getFullYear() && viewMonth === today.getMonth()) ? 'inline' : 'none';
+}
+
+function getFilteredEvents() {
+  const allEvents = (Array.isArray(state.events) ? state.events : []).filter(hasFixedDate);
+  let list = allEvents.filter(ev => eventMatchesTab(ev, currentTab));
+  if (activeFilters.categories.length > 0) list = list.filter(ev => activeFilters.categories.includes(ev.category));
+  if (activeFilters.countries.length > 0) list = list.filter(ev => activeFilters.countries.includes(ev.country));
+  return list;
+}
+function daysInMonth(year, month) { return new Date(year, month + 1, 0).getDate(); }
+function assignLanes(events, monthStart, monthEnd) {
+  const spans = events.map(ev => {
+    const s = new Date(ev.start + "T00:00:00"); const e = new Date(ev.end + "T00:00:00");
+    const clipStart = s < monthStart ? monthStart : s; const clipEnd = e > monthEnd ? monthEnd : e;
+    return { ev, clipStart, clipEnd };
+  }).filter(x => x.clipStart <= x.clipEnd);
+  spans.sort((a, b) => a.clipStart - b.clipStart || (a.clipEnd - a.clipStart) - (b.clipEnd - b.clipStart));
+  const laneEndDates = [];
+  spans.forEach(span => {
+    let placed = false;
+    for (let i = 0; i < laneEndDates.length; i++) { if (span.clipStart > laneEndDates[i]) { laneEndDates[i] = span.clipEnd; span.lane = i; placed = true; break; } }
+    if (!placed) { laneEndDates.push(span.clipEnd); span.lane = laneEndDates.length - 1; }
+  });
+  return { spans, laneCount: laneEndDates.length };
+}
+
+let tooltipHideTimer = null;
+function scheduleTooltipHide() { clearTooltipHideTimer(); tooltipHideTimer = setTimeout(() => { document.getElementById('eventTooltip').style.display = 'none'; }, 200); }
+function clearTooltipHideTimer() { if (tooltipHideTimer) { clearTimeout(tooltipHideTimer); tooltipHideTimer = null; } }
+function showTooltip(ev, anchorEl) {
+  const tip = document.getElementById('eventTooltip');
+  const linkHtml = isValidUrl(ev.link) ? '<div class="tt-row"><span class="tt-label">Link: </span><a href="' + escapeHtml(ev.link) + '" target="_blank" rel="noopener noreferrer">Visit event site &#8599;</a></div>' : (ev.link ? '<div class="tt-row"><span class="tt-label">Link: </span>' + escapeHtml(ev.link) + '</div>' : '');
+  const tagsHtml = [];
+  if (ev.manualTags && ev.manualTags.signedUp) tagsHtml.push('Signed Up');
+  if (ev.manualTags && ev.manualTags.speakingAt) tagsHtml.push('Speaking At');
+  if (ev.manualTags && ev.manualTags.hosting) tagsHtml.push('Hosting');
+  if (ev.manualTags && ev.manualTags.notAttending) tagsHtml.push('Not Attending');
+  tip.innerHTML =
+    '<strong>' + escapeHtml(ev.name) + '</strong>' +
+    '<div class="tt-row"><span class="tt-label">Dates: </span>' + fmtDateHuman(ev.start) + ' &rarr; ' + fmtDateHuman(ev.end) + '</div>' +
+    '<div class="tt-row"><span class="tt-label">Category: </span>' + escapeHtml(ev.category || '—') + '</div>' +
+    '<div class="tt-row"><span class="tt-label">Country: </span>' + escapeHtml(ev.country || '—') + '</div>' +
+    (tagsHtml.length ? '<div class="tt-row"><span class="tt-label">Status: </span>' + tagsHtml.join(', ') + '</div>' : '') +
+    (ev.notes ? '<div class="tt-row"><span class="tt-label">Notes: </span>' + escapeHtml(ev.notes) + '</div>' : '') +
+    linkHtml +
+    (ev.note ? '<div class="tt-note">' + escapeHtml(ev.note) + '</div>' : '');
+  tip.style.display = 'block';
+  const rect = anchorEl.getBoundingClientRect();
+  positionTooltipNear(rect);
+  clearTooltipHideTimer();
+  tip.onmouseenter = clearTooltipHideTimer;
+  tip.onmouseleave = scheduleTooltipHide;
+}
+function positionTooltipNear(rect) {
+  const tip = document.getElementById('eventTooltip');
+  let left = rect.left; let top = rect.bottom + 8;
+  const tipRect = tip.getBoundingClientRect();
+  if (left + tipRect.width > window.innerWidth) left = window.innerWidth - tipRect.width - 10;
+  if (top + tipRect.height > window.innerHeight) top = rect.top - tipRect.height - 8;
+  tip.style.left = Math.max(6, left) + 'px';
+  tip.style.top = Math.max(6, top) + 'px';
+}
+
+const HOSTING_LOGO_SVG = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><text x="1" y="17" font-family="Georgia, serif" font-size="13" font-weight="bold">VD</text></svg>';
+
+function renderCalendar() {
+  renderMonthYearSelectors();
+  const grid = document.getElementById('calendarGrid');
+  grid.innerHTML = '';
+  grid.classList.toggle('search-mode', !!highlightedEventId);
+
+  const numDays = daysInMonth(viewYear, viewMonth);
+  const monthStart = new Date(viewYear, viewMonth, 1);
+  const monthEnd = new Date(viewYear, viewMonth, numDays);
+  const events = getFilteredEvents();
+  const { spans, laneCount } = assignLanes(events, monthStart, monthEnd);
+
+  document.getElementById('resultCount').textContent = events.length + ' event' + (events.length === 1 ? '' : 's') + ' — ' + MONTH_NAMES[viewMonth] + ' ' + viewYear;
+
+  const effectiveLaneCount = Math.max(laneCount, 1);
+  grid.style.gridTemplateColumns = 'repeat(' + numDays + ', minmax(0, 1fr))';
+  grid.style.gridTemplateRows = '30px repeat(' + effectiveLaneCount + ', minmax(22px, auto))';
+
+  let todayColIndex = -1;
+  for (let d = 1; d <= numDays; d++) {
+    const dateObj = new Date(viewYear, viewMonth, d);
+    const dow = dateObj.getDay();
+    const isToday = dateObj.getTime() === today.getTime();
+    if (isToday) todayColIndex = d;
+    const cell = document.createElement('div');
+    cell.className = 'day-header-cell' + ((dow === 0 || dow === 6) ? ' weekend' : '') + (isToday ? ' today-header' : '');
+    cell.style.gridColumn = d; cell.style.gridRow = 1;
+    cell.innerHTML = '<span class="dow">' + DOW_NAMES[dow] + '</span>' + d;
+    grid.appendChild(cell);
+  }
+
+  for (let lane = 0; lane < effectiveLaneCount; lane++) {
+    for (let d = 1; d <= numDays; d++) {
+      const dateObj = new Date(viewYear, viewMonth, d);
+      const bg = document.createElement('div');
+      bg.className = 'day-col-bg' + (dateObj < today ? ' past-day' : '');
+      bg.style.gridColumn = d; bg.style.gridRow = lane + 2;
+      grid.appendChild(bg);
+    }
+  }
+
+  if (spans.length === 0) {
+    const msg = document.createElement('div'); msg.className = 'empty-cal-msg';
+    msg.style.gridColumn = '1 / -1'; msg.style.gridRow = '2';
+    msg.textContent = 'No events to display for ' + MONTH_NAMES[viewMonth] + ' ' + viewYear + '.';
+    grid.appendChild(msg);
+  }
+
+  spans.forEach(span => {
+    const startDay = span.clipStart.getDate();
+    const endDay = span.clipEnd.getDate();
+    const colStart = startDay; const colEnd = endDay + 1;
+    const spanWidth = endDay - startDay + 1;
+
+    const bar = document.createElement('div');
+    bar.className = 'event-bar';
+    const tags = span.ev.manualTags || {};
+    if (tags.signedUp) bar.classList.add('tag-signedup');
+    if (tags.speakingAt) bar.classList.add('tag-speakingat');
+    if (tags.hosting) bar.classList.add('tag-hosting');
+    if (tags.notAttending) bar.classList.add('tag-notattending');
+    if (highlightedEventId && span.ev.id === highlightedEventId) bar.classList.add('search-highlighted');
+
+    const isPastEvent = new Date(span.ev.end + "T00:00:00") < today;
+    if (isPastEvent) bar.classList.add('past-event');
+    bar.style.gridColumn = colStart + ' / ' + colEnd;
+    bar.style.gridRow = span.lane + 2;
+
+    const nameSpan = document.createElement('span'); nameSpan.className = 'ev-name'; nameSpan.textContent = span.ev.name;
+    bar.appendChild(nameSpan);
+
+    if (spanWidth >= 3) {
+      const metaSpan = document.createElement('span'); metaSpan.className = 'ev-meta';
+      metaSpan.textContent = '· ' + (span.ev.country || '') + (span.ev.category ? ' · ' + span.ev.category : '');
+      bar.appendChild(metaSpan);
+    }
+
+    if (tags.hosting) {
+      const badge = document.createElement('span'); badge.className = 'hosting-logo-badge'; badge.innerHTML = HOSTING_LOGO_SVG; badge.title = 'VD Law Group — Hosting';
+      bar.appendChild(badge);
+      bar.addEventListener('mouseenter', () => bar.classList.add('shimmer-active'));
+      bar.addEventListener('mouseleave', () => bar.classList.remove('shimmer-active'));
+    }
+
+    if (span.ev.note && span.ev.note.trim()) {
+      const noteTab = document.createElement('span'); noteTab.className = 'note-indicator';
+      bar.appendChild(noteTab);
+    }
+
+    if (span.ev.name.length > spanWidth * 7) { bar.classList.add('tall'); if (span.ev.name.length > spanWidth * 14) bar.classList.add('extra-tall'); }
+
+    let showTimer = null;
+    bar.addEventListener('mouseenter', () => { showTimer = setTimeout(() => showTooltip(span.ev, bar), 80); });
+    bar.addEventListener('mouseleave', () => { if (showTimer) clearTimeout(showTimer); scheduleTooltipHide(); });
+    bar.addEventListener('click', () => { if (session.isAdmin) { openEventModal(span.ev.id); } });
+
+    grid.appendChild(bar);
+  });
+
+  const wrap = document.querySelector('.calendar-grid-wrap');
+  const existingLine = wrap.querySelector('.today-col-line');
+  if (existingLine) existingLine.remove();
+  if (todayColIndex > 0) {
+    requestAnimationFrame(() => {
+      const headerCells = grid.querySelectorAll('.day-header-cell');
+      const targetCell = headerCells[todayColIndex - 1];
+      if (targetCell) {
+        const wrapRect = wrap.getBoundingClientRect();
+        const cellRect = targetCell.getBoundingClientRect();
+        const centerX = (cellRect.left - wrapRect.left) + (cellRect.width / 2);
+        const line = document.createElement('div');
+        line.className = 'today-col-line';
+        line.style.left = (centerX - 1) + 'px';
+        wrap.appendChild(line);
+      }
+    });
+  }
+}
+
+document.getElementById('prevMonthBtn').addEventListener('click', () => { viewMonth -= 1; if (viewMonth < 0) { viewMonth = 11; viewYear -= 1; } renderCalendar(); });
+document.getElementById('nextMonthBtn').addEventListener('click', () => { viewMonth += 1; if (viewMonth > 11) { viewMonth = 0; viewYear += 1; } renderCalendar(); });
+document.getElementById('todayBtn').addEventListener('click', () => { viewYear = today.getFullYear(); viewMonth = today.getMonth(); highlightedEventId = null; renderCalendar(); });
+document.getElementById('monthFilterSelect').addEventListener('change', (e) => { viewMonth = parseInt(e.target.value, 10); renderCalendar(); });
+document.getElementById('yearFilterSelect').addEventListener('change', (e) => { viewYear = parseInt(e.target.value, 10); renderCalendar(); });
+window.addEventListener('resize', () => renderCalendar());
+
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+function updateAdminUI() {
+  document.getElementById('adminStatus').textContent = session.isAdmin ? "Viewing as: Admin" : "Viewing as: Guest";
+  document.getElementById('loginBtn').style.display = session.isAdmin ? 'none' : 'inline-block';
+  document.getElementById('logoutBtn').style.display = session.isAdmin ? 'inline-block' : 'none';
+  document.getElementById('changePwBtn').style.display = session.isAdmin ? 'inline-block' : 'none';
+  const addBtn = document.getElementById('addEventBtn');
+  addBtn.disabled = !session.isAdmin;
+  addBtn.title = session.isAdmin ? '' : 'Log in as admin to add events';
+}
+
+function populateSelect(selectEl, options, selectedValue) {
+  selectEl.innerHTML = "";
+  options.forEach(opt => { const o = document.createElement('option'); o.value = opt; o.textContent = opt; if (opt === selectedValue) o.selected = true; selectEl.appendChild(o); });
+}
+
+let dpState = { leftYear: today.getFullYear(), leftMonth: today.getMonth(), rangeStart: null, rangeEnd: null, mode: 'day', unknownMonth: null, unknownYear: today.getFullYear() };
+function dpRightMonthDate() { let m = dpState.leftMonth + 1, y = dpState.leftYear; if (m > 11) { m = 0; y += 1; } return { y, m }; }
+function dpFmt(y, m, d) { return y + '-' + String(m+1).padStart(2,'0') + '-' + String(d).padStart(2,'0'); }
+
+function dpBuildMonthGrid(container, year, month, isLeft) {
+  container.innerHTML = '';
+  const nav = document.createElement('div'); nav.className = 'datepicker-month-nav';
+  const prevBtn = document.createElement('button'); prevBtn.textContent = '‹'; prevBtn.type = 'button';
+  prevBtn.onclick = () => { dpState.leftMonth -= 1; if (dpState.leftMonth < 0) { dpState.leftMonth = 11; dpState.leftYear -= 1; } renderDatepicker(); };
+  const title = document.createElement('div'); title.className = 'datepicker-month-title'; title.textContent = MONTH_NAMES[month] + ' ' + year;
+  const nextBtn = document.createElement('button'); nextBtn.textContent = '›'; nextBtn.type = 'button';
+  nextBtn.onclick = () => { dpState.leftMonth += 1; if (dpState.leftMonth > 11) { dpState.leftMonth = 0; dpState.leftYear += 1; } renderDatepicker(); };
+  if (isLeft) { nav.appendChild(prevBtn); nav.appendChild(title); nav.appendChild(document.createElement('span')); }
+  else { nav.appendChild(document.createElement('span')); nav.appendChild(title); nav.appendChild(nextBtn); }
+  container.appendChild(nav);
+
+  const grid = document.createElement('div'); grid.className = 'datepicker-grid';
+  DOW_NAMES.forEach(d => { const c = document.createElement('div'); c.className = 'datepicker-dow'; c.textContent = d; grid.appendChild(c); });
+
+  const numDays = daysInMonth(year, month);
+  const firstDow = new Date(year, month, 1).getDay();
+  const totalCells = Math.ceil((firstDow + numDays) / 7) * 7;
+
+  for (let i = 0; i < totalCells; i++) {
+    const dayNum = i - firstDow + 1;
+    const cell = document.createElement('div'); cell.className = 'datepicker-day';
+    if (dayNum < 1 || dayNum > numDays) { cell.classList.add('outside'); cell.textContent = ''; grid.appendChild(cell); continue; }
+    cell.textContent = dayNum;
+    const iso = dpFmt(year, month, dayNum);
+    if (dpState.rangeStart && iso === dpState.rangeStart) cell.classList.add('range-edge');
+    if (dpState.rangeEnd && iso === dpState.rangeEnd) cell.classList.add('range-edge');
+    if (dpState.rangeStart && dpState.rangeEnd && iso > dpState.rangeStart && iso < dpState.rangeEnd) cell.classList.add('in-range');
+    cell.addEventListener('click', () => {
+      if (!dpState.rangeStart || (dpState.rangeStart && dpState.rangeEnd)) { dpState.rangeStart = iso; dpState.rangeEnd = null; }
+      else { if (iso < dpState.rangeStart) { dpState.rangeEnd = dpState.rangeStart; dpState.rangeStart = iso; } else { dpState.rangeEnd = iso; } }
+      renderDatepicker();
+    });
+    grid.appendChild(cell);
+  }
+  container.appendChild(grid);
+}
+
+function renderDpSelectionSummary() {
+  const summary = document.getElementById('dpSelectionSummary');
+  if (dpState.mode === 'unknown') {
+    let txt = 'Unknown date';
+    if (dpState.unknownMonth) txt += ' — ' + MONTH_NAMES[dpState.unknownMonth - 1];
+    txt += ' ' + dpState.unknownYear;
+    summary.textContent = txt;
+  } else if (dpState.rangeStart && dpState.rangeEnd) { summary.textContent = fmtDateHuman(dpState.rangeStart) + ' → ' + fmtDateHuman(dpState.rangeEnd); }
+  else if (dpState.rangeStart) { summary.textContent = fmtDateHuman(dpState.rangeStart) + ' (single day so far — click again for end date, or OK to use as one-day event)'; }
+  else { summary.textContent = 'No dates selected'; }
+}
+
+function renderDatepicker() {
+  const wrap = document.getElementById('dpMonthsWrap');
+  wrap.innerHTML = '';
+  const leftCol = document.createElement('div'); leftCol.className = 'datepicker-month';
+  dpBuildMonthGrid(leftCol, dpState.leftYear, dpState.leftMonth, true);
+  const rightInfo = dpRightMonthDate();
+  const rightCol = document.createElement('div'); rightCol.className = 'datepicker-month';
+  dpBuildMonthGrid(rightCol, rightInfo.y, rightInfo.m, false);
+  wrap.appendChild(leftCol); wrap.appendChild(rightCol);
+  renderDpSelectionSummary();
+}
+
+function renderDpUnknownPickers() {
+  const monthGrid = document.getElementById('dpMonthGrid');
+  monthGrid.innerHTML = '';
+  const noneCell = document.createElement('div');
+  noneCell.className = 'datepicker-quickpick-cell' + (dpState.unknownMonth === null ? ' selected' : '');
+  noneCell.textContent = 'Unknown';
+  noneCell.onclick = () => { dpState.unknownMonth = null; renderDpUnknownPickers(); renderDpSelectionSummary(); };
+  monthGrid.appendChild(noneCell);
+  MONTH_NAMES.forEach((m, idx) => {
+    const cell = document.createElement('div');
+    cell.className = 'datepicker-quickpick-cell' + (dpState.unknownMonth === idx + 1 ? ' selected' : '');
+    cell.textContent = m.slice(0,3);
+    cell.onclick = () => { dpState.unknownMonth = idx + 1; renderDpUnknownPickers(); renderDpSelectionSummary(); };
+    monthGrid.appendChild(cell);
+  });
+  const yearGrid = document.getElementById('dpYearGrid');
+  yearGrid.innerHTML = '';
+  const baseYear = today.getFullYear();
+  for (let y = baseYear; y <= baseYear + 3; y++) {
+    const cell = document.createElement('div');
+    cell.className = 'datepicker-quickpick-cell' + (dpState.unknownYear === y ? ' selected' : '');
+    cell.textContent = y;
+    cell.onclick = () => { dpState.unknownYear = y; renderDpUnknownPickers(); renderDpSelectionSummary(); };
+    yearGrid.appendChild(cell);
+  }
+}
+
+document.getElementById('dpModeDayBtn').addEventListener('click', () => {
+  dpState.mode = 'day';
+  document.getElementById('dpDayModeView').style.display = 'block';
+  document.getElementById('dpUnknownModeView').style.display = 'none';
+  renderDpSelectionSummary();
+});
+document.getElementById('dpModeUnknownBtn').addEventListener('click', () => {
+  dpState.mode = 'unknown';
+  document.getElementById('dpDayModeView').style.display = 'none';
+  document.getElementById('dpUnknownModeView').style.display = 'block';
+  renderDpUnknownPickers();
+  renderDpSelectionSummary();
+});
+
+document.getElementById('openDatePickerBtn').addEventListener('click', () => {
+  const existingStart = document.getElementById('eventStartInput').value;
+  const existingEnd = document.getElementById('eventEndInput').value;
+  dpState = {
+    leftYear: existingStart && existingStart !== '__UNKNOWN__' ? parseInt(existingStart.slice(0,4)) : today.getFullYear(),
+    leftMonth: existingStart && existingStart !== '__UNKNOWN__' ? parseInt(existingStart.slice(5,7)) - 1 : today.getMonth(),
+    rangeStart: (existingStart && existingStart !== '__UNKNOWN__') ? existingStart : null,
+    rangeEnd: (existingEnd && existingStart !== '__UNKNOWN__') ? existingEnd : null,
+    mode: 'day', unknownMonth: null, unknownYear: today.getFullYear()
+  };
+  document.getElementById('dpDayModeView').style.display = 'block';
+  document.getElementById('dpUnknownModeView').style.display = 'none';
+  renderDatepicker();
+  openModal_dp();
+});
+
+function openModal_dp() { document.getElementById('datepickerOverlay').classList.add('open'); }
+function closeModal_dp() { document.getElementById('datepickerOverlay').classList.remove('open'); }
+document.getElementById('dpCancelBtn').addEventListener('click', closeModal_dp);
+document.getElementById('datepickerOverlay').addEventListener('click', (e) => { if (e.target.id === 'datepickerOverlay') closeModal_dp(); });
+
+document.getElementById('dpOkBtn').addEventListener('click', () => {
+  if (dpState.mode === 'unknown') {
+    document.getElementById('eventStartInput').value = '__UNKNOWN__';
+    document.getElementById('eventEndInput').value = JSON.stringify({ month: dpState.unknownMonth, year: dpState.unknownYear });
+    document.getElementById('eventStartDisplay').value = dpState.unknownMonth ? (MONTH_NAMES[dpState.unknownMonth - 1] + ' ' + dpState.unknownYear + ' (day unknown)') : ('Year ' + dpState.unknownYear + ' only (date unknown)');
+    document.getElementById('eventEndDisplay').value = 'Will move to "Unknown Date/Location" tab';
+  } else {
+    if (!dpState.rangeStart) { closeModal_dp(); return; }
+    const finalStart = dpState.rangeStart;
+    const finalEnd = dpState.rangeEnd || dpState.rangeStart;
+    document.getElementById('eventStartInput').value = finalStart;
+    document.getElementById('eventEndInput').value = finalEnd;
+    document.getElementById('eventStartDisplay').value = fmtDateHuman(finalStart);
+    document.getElementById('eventEndDisplay').value = fmtDateHuman(finalEnd);
+  }
+  closeModal_dp();
+});
+
+function openEventModal(editId) {
+  document.getElementById('eventFormError').textContent = '';
+  document.getElementById('eventIdInput').value = editId || '';
+  document.getElementById('manualTagsRow').style.display = session.isAdmin ? 'flex' : 'none';
+  populateSelect(document.getElementById('eventCategorySelect'), state.categories, null);
+  populateSelect(document.getElementById('eventCountrySelect'), state.countries, null);
+  document.getElementById('newCategoryInput').value = '';
+  document.getElementById('newCountryInput').value = '';
+
+  if (editId) {
+    const ev = state.events.find(e => e.id === editId);
+    document.getElementById('eventModalTitle').textContent = 'Edit Event.';
+    document.getElementById('eventNameInput').value = ev.name;
+    if (hasFixedDate(ev)) {
+      document.getElementById('eventStartInput').value = ev.start;
+      document.getElementById('eventEndInput').value = ev.end;
+      document.getElementById('eventStartDisplay').value = fmtDateHuman(ev.start);
+      document.getElementById('eventEndDisplay').value = fmtDateHuman(ev.end);
+    } else {
+      document.getElementById('eventStartInput').value = '__UNKNOWN__';
+      document.getElementById('eventEndInput').value = JSON.stringify({ month: ev.knownMonth, year: ev.knownYear });
+      document.getElementById('eventStartDisplay').value = ev.knownMonth ? (MONTH_NAMES[ev.knownMonth - 1] + ' ' + (ev.knownYear||'') + ' (day unknown)') : ('Year ' + (ev.knownYear||'?') + ' only');
+      document.getElementById('eventEndDisplay').value = 'In "Unknown Date/Location" tab';
+    }
+    populateSelect(document.getElementById('eventCategorySelect'), state.categories, ev.category);
+    populateSelect(document.getElementById('eventCountrySelect'), state.countries, ev.country);
+    document.getElementById('eventLinkInput').value = ev.link || '';
+    document.getElementById('eventNotesInput').value = ev.notes || '';
+    document.getElementById('eventNoteInput').value = ev.note || '';
+    document.getElementById('tagSignedUp').checked = !!(ev.manualTags && ev.manualTags.signedUp);
+    document.getElementById('tagSpeakingAt').checked = !!(ev.manualTags && ev.manualTags.speakingAt);
+    document.getElementById('tagHosting').checked = !!(ev.manualTags && ev.manualTags.hosting);
+    document.getElementById('tagNotAttending').checked = !!(ev.manualTags && ev.manualTags.notAttending);
+  } else {
+    document.getElementById('eventModalTitle').textContent = 'Add Event.';
+    document.getElementById('eventNameInput').value = '';
+    document.getElementById('eventStartInput').value = '';
+    document.getElementById('eventEndInput').value = '';
+    document.getElementById('eventStartDisplay').value = '';
+    document.getElementById('eventEndDisplay').value = '';
+    document.getElementById('eventLinkInput').value = '';
+    document.getElementById('eventNotesInput').value = '';
+    document.getElementById('eventNoteInput').value = '';
+    document.getElementById('tagSignedUp').checked = false;
+    document.getElementById('tagSpeakingAt').checked = false;
+    document.getElementById('tagHosting').checked = false;
+    document.getElementById('tagNotAttending').checked = false;
+  }
+  openModal('eventModal');
+}
+
+function initEventHandlers() {
+  document.querySelectorAll('[data-close]').forEach(btn => { btn.addEventListener('click', () => closeModal(btn.dataset.close)); });
+
+  document.getElementById('clearFiltersBtn').addEventListener('click', () => {
+    activeFilters.categories = []; activeFilters.countries = [];
+    renderFilterPanels(); renderCalendar();
+  });
+
+  document.getElementById('loginBtn').addEventListener('click', () => {
+    document.getElementById('loginPasswordInput').value = '';
+    document.getElementById('loginError').textContent = '';
+    openModal('loginModal');
+    setTimeout(() => document.getElementById('loginPasswordInput').focus(), 50);
+  });
+
+  document.getElementById('loginSubmitBtn').addEventListener('click', () => {
+    const val = document.getElementById('loginPasswordInput').value;
+    if (val === state.adminPassword) {
+      session.isAdmin = true;
+      updateAdminUI(); renderCalendar();
+      if (currentTab === 'unknown') renderUnknownTable();
+      closeModal('loginModal');
+    } else { document.getElementById('loginError').textContent = 'Incorrect password.'; }
+  });
+  document.getElementById('loginPasswordInput').addEventListener('keydown', (e) => { if (e.key === 'Enter') document.getElementById('loginSubmitBtn').click(); });
+
+  document.getElementById('logoutBtn').addEventListener('click', () => { session.isAdmin = false; updateAdminUI(); renderCalendar(); if (currentTab === 'unknown') renderUnknownTable(); });
+
+  document.getElementById('changePwBtn').addEventListener('click', () => {
+    document.getElementById('currentPwInput').value = ''; document.getElementById('newPwInput').value = ''; document.getElementById('confirmPwInput').value = '';
+    document.getElementById('changePwError').textContent = '';
+    openModal('changePwModal');
+  });
+
+  document.getElementById('changePwSubmitBtn').addEventListener('click', () => {
+    const cur = document.getElementById('currentPwInput').value;
+    const nw = document.getElementById('newPwInput').value;
+    const conf = document.getElementById('confirmPwInput').value;
+    const errBox = document.getElementById('changePwError');
+    if (cur !== state.adminPassword) { errBox.textContent = 'Current password is incorrect.'; return; }
+    if (nw.length < 6) { errBox.textContent = 'New password must be at least 6 characters.'; return; }
+    if (nw !== conf) { errBox.textContent = 'New password and confirmation do not match.'; return; }
+    state.adminPassword = nw;
+    saveState(state);
+    errBox.style.color = '#3a9d3a';
+    errBox.textContent = 'Password updated successfully.';
+    setTimeout(() => closeModal('changePwModal'), 900);
+  });
+
+  document.getElementById('addEventBtn').addEventListener('click', () => { if (!session.isAdmin) return; openEventModal(null); });
+
+  document.getElementById('addCategoryBtn').addEventListener('click', () => {
+    const val = document.getElementById('newCategoryInput').value.trim();
+    if (!val) return;
+    if (state.categories.indexOf(val) === -1) state.categories.push(val);
+    saveState(state);
+    populateSelect(document.getElementById('eventCategorySelect'), state.categories, val);
+    document.getElementById('newCategoryInput').value = '';
+  });
+
+  document.getElementById('addCountryBtn').addEventListener('click', () => {
+    const val = document.getElementById('newCountryInput').value.trim();
+    if (!val) return;
+    if (state.countries.indexOf(val) === -1) state.countries.push(val);
+    saveState(state);
+    populateSelect(document.getElementById('eventCountrySelect'), state.countries, val);
+    document.getElementById('newCountryInput').value = '';
+  });
+
+  document.getElementById('eventSubmitBtn').addEventListener('click', () => {
+    const errBox = document.getElementById('eventFormError');
+    const id = document.getElementById('eventIdInput').value;
+    const name = document.getElementById('eventNameInput').value.trim();
+    const rawStart = document.getElementById('eventStartInput').value;
+    const rawEnd = document.getElementById('eventEndInput').value;
+    const category = document.getElementById('eventCategorySelect').value;
+    const country = document.getElementById('eventCountrySelect').value;
+    const link = document.getElementById('eventLinkInput').value.trim();
+    const notes = document.getElementById('eventNotesInput').value.trim();
+    const note = document.getElementById('eventNoteInput').value.trim();
+
+    if (!name) { errBox.textContent = 'Event name is required.'; return; }
+    if (!rawStart) { errBox.textContent = 'Please select a date using the calendar icon.'; return; }
+
+    const manualTags = {
+      signedUp: document.getElementById('tagSignedUp').checked,
+      speakingAt: document.getElementById('tagSpeakingAt').checked,
+      hosting: document.getElementById('tagHosting').checked,
+      notAttending: document.getElementById('tagNotAttending').checked
+    };
+
+    let eventData;
+    if (rawStart === '__UNKNOWN__') {
+      let monthYear = {};
+      try { monthYear = JSON.parse(rawEnd) || {}; } catch(e) {}
+      eventData = { name, start: null, end: null, category, country, link, notes, note, manualTags,
+        dateStatus: monthYear.month ? 'month_known' : 'no_date', knownMonth: monthYear.month || null, knownYear: monthYear.year || null };
+    } else {
+      if (rawEnd < rawStart) { errBox.textContent = 'End date cannot be before start date.'; return; }
+      eventData = { name, start: rawStart, end: rawEnd, category, country, link, notes, note, manualTags, dateStatus: 'confirmed', knownMonth: null, knownYear: null };
+    }
+
+    if (id) { const ev = state.events.find(e => e.id === id); Object.assign(ev, eventData); }
+    else { state.events.push(Object.assign({ id: uid() }, eventData)); }
+    saveState(state);
+    closeModal('eventModal');
+    renderFilterPanels();
+    renderCalendar();
+    if (currentTab === 'unknown') renderUnknownTable();
+  });
+
+  document.querySelectorAll('.modal-overlay').forEach(overlay => { overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.classList.remove('open'); }); });
+}
+
+function init() {
+  initTheme();
+  renderRibbon();
+  renderFilterPanels();
+  renderCalendar();
+  updateAdminUI();
+  initEventHandlers();
+
+  if (!state.firstRunShown) {
+    document.getElementById('generatedPwDisplay').value = state.adminPassword;
+    openModal('firstRunModal');
+    state.firstRunShown = true;
+    saveState(state);
+  }
+}
+
+if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init); } else { init(); }
+</script>
+</body>
+</html>
